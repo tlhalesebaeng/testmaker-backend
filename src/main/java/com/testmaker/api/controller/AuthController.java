@@ -1,6 +1,6 @@
 package com.testmaker.api.controller;
 
-import com.testmaker.api.dto.auth.CreateAccountRequest;
+import com.testmaker.api.dto.auth.SignupRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("${api.prefix}/auth")
 public class AuthController {
     @PostMapping("/signup")
-    public ResponseEntity<Object> signup(@RequestBody CreateAccountRequest requestDto) {
+    public ResponseEntity<Object> signup(@RequestBody SignupRequest requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
 }
