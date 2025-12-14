@@ -1,5 +1,6 @@
 package com.testmaker.api.controller;
 
+import com.testmaker.api.dto.auth.LoginRequest;
 import com.testmaker.api.dto.auth.SignupRequest;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -15,5 +16,10 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<Object> signup(@Valid @RequestBody SignupRequest requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest requestDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }
