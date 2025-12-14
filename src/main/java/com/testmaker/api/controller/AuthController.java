@@ -1,6 +1,7 @@
 package com.testmaker.api.controller;
 
 import com.testmaker.api.dto.auth.LoginRequest;
+import com.testmaker.api.dto.auth.NewPasswordRequest;
 import com.testmaker.api.dto.auth.ResetPasswordRequest;
 import com.testmaker.api.dto.auth.SignupRequest;
 import jakarta.validation.Valid;
@@ -26,6 +27,11 @@ public class AuthController {
 
     @PostMapping("/password/reset")
     public ResponseEntity<Object> resetPassword(@Valid @RequestBody ResetPasswordRequest requestDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @PostMapping("/password/new")
+    public ResponseEntity<Object> newPassword(@Valid @RequestBody NewPasswordRequest requestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 }
