@@ -28,7 +28,7 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    @PostMapping("/password/reset/code")
+    @PostMapping("/code")
     public ResponseEntity<Object> confirmCode(@Valid @RequestBody ConfirmCodeRequest requestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
