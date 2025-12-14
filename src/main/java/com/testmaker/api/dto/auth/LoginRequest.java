@@ -7,9 +7,9 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class LoginRequest {
-    @NotBlank(message = "Invalid username provided! Please provide a valid username")
+    @NotBlank(message = "Username required! Please provide a valid username")
     private String username;
 
-    @NotBlank(message = "Invalid password provided! Please provide a valid password")
+    @NotBlank(message = "Password required! Please provide a valid password")
     private String password;
 }
