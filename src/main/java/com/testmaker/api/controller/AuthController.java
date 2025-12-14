@@ -1,9 +1,6 @@
 package com.testmaker.api.controller;
 
-import com.testmaker.api.dto.auth.LoginRequest;
-import com.testmaker.api.dto.auth.NewPasswordRequest;
-import com.testmaker.api.dto.auth.ResetPasswordRequest;
-import com.testmaker.api.dto.auth.SignupRequest;
+import com.testmaker.api.dto.auth.*;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +24,11 @@ public class AuthController {
 
     @PostMapping("/password/reset")
     public ResponseEntity<Object> resetPassword(@Valid @RequestBody ResetPasswordRequest requestDto) {
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @PostMapping("/password/reset/code")
+    public ResponseEntity<Object> confirmCode(@Valid @RequestBody ConfirmCodeRequest requestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
