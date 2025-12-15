@@ -1,4 +1,4 @@
-package com.testmaker.api.repo;
+package com.testmaker.api.repository;
 
 import com.testmaker.api.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
