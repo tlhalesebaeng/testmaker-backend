@@ -3,6 +3,7 @@ package com.testmaker.api.service.user;
 import com.testmaker.api.dto.auth.SignupRequest;
 import com.testmaker.api.entity.User;
 import com.testmaker.api.repository.UserRepository;
+import com.testmaker.api.utils.Status;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class UserService implements UserServiceInterface{
         user.setEmail(requestDto.getEmail());
         user.setUsername(requestDto.getUsername());
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        user.setStatus(Status.PENDING_EMAIL_VERIFICATION);
         return userRepo.save(user);
     }
 }
