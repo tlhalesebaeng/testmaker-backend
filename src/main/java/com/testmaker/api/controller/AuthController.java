@@ -41,6 +41,12 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
+    @PostMapping("/verify/email")
+    public ResponseEntity<Object> verifyEmailAddress(@Valid @RequestBody ConfirmCodeRequest requestDto) {
+        UserResponse responseDto = UserMapper.toResponse(userService.verifyEmailAddress(requestDto));
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
     @PatchMapping("/password/new")
     public ResponseEntity<Object> newPassword(@Valid @RequestBody NewPasswordRequest requestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(null);
