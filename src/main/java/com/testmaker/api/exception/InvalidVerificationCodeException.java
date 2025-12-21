@@ -1,4 +1,4 @@
 package com.testmaker.api.exception;
 
-public class InvalidVerificationCodeException {
+public class InvalidVerificationCodeException extends RuntimeException {
 }
