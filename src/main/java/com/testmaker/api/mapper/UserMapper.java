@@ -8,6 +8,7 @@ public class UserMapper {
         UserResponse response = new UserResponse();
         response.setId(user.getId());
         response.setUsername(user.getUsername());
+        response.setStatus(user.getStatus());
         return response;
     }
 }
