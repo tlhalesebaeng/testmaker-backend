@@ -1,4 +1,12 @@
 package com.testmaker.api.config;
 
-public class CorsConfig {
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+public class CorsConfig implements CorsConfigurationSource {
+    @Override
+    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+        return null;
+    }
 }
