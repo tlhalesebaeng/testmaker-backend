@@ -1,9 +1,7 @@
 package com.testmaker.api.service.jwt;
 
 import com.testmaker.api.entity.User;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,5 +31,13 @@ public class JwtService implements JwtServiceInterface{
         jwtBuilder.setExpiration(new Date(System.currentTimeMillis() + jwtExpiration));
         jwtBuilder.signWith(this.getKey(), SignatureAlgorithm.HS256);
         return jwtBuilder.compact();
+    }
+
+    @Override
+    public Claims getAllClaims(String token) {
+        JwtParserBuilder jwtBuilder = Jwts.parserBuilder();
+        jwtBuilder.setSigningKey(this.getKey());
+        JwtParser jwtParser = jwtBuilder.build();
+        return jwtParser.parseClaimsJws(token).getBody();
     }
 }
