@@ -17,4 +17,8 @@ public class RouteDefinition {
     public HttpMethod getMethod() {
         return HttpMethod.valueOf(this.method);
     }
+
+    public boolean matches(String method, String path) {
+        return this.method.matches(method) && matcher.match(URI, path);
+    }
 }
