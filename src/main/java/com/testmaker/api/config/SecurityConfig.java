@@ -1,5 +1,6 @@
 package com.testmaker.api.config;
 
+import com.testmaker.api.service.route.RouteServiceInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
+    private final RouteServiceInterface routeService;
     private final @Qualifier("corsConfig") CorsConfigurationSource corsConfigSource;
 
     @Bean
@@ -28,6 +30,12 @@ public class SecurityConfig {
         http.cors(customizer -> customizer.configurationSource(corsConfigSource));
         http.sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.authenticationProvider(new DaoAuthenticationProvider(userDetailsService));
+        http.authorizeHttpRequests(customizer -> {
+            routeService.getProtected().forEach(
+                    route -> customizer.requestMatchers(route.getMethod(), route.getURI()).authenticated()
+            );
+            customizer.anyRequest().permitAll();
+        });
         return http.build();
     }
 }
