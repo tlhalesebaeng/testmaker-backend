@@ -14,6 +14,11 @@ public class Route {
         this.matcher = new AntPathMatcher();
     }
 
+    // Do not use lombok for getters since we dont want getters for all fields
+    public String getURI() {
+        return this.URI;
+    }
+
     public HttpMethod getMethod() {
         return HttpMethod.valueOf(this.method);
     }
