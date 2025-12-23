@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface RouteServiceInterface {
     List<Route> getProtected();
+    boolean isProtected(String URI, String method);
 }
