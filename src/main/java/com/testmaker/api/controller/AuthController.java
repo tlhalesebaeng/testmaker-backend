@@ -2,8 +2,12 @@ package com.testmaker.api.controller;
 
 import com.testmaker.api.dto.auth.*;
 import com.testmaker.api.dto.user.UserResponse;
+import com.testmaker.api.entity.User;
 import com.testmaker.api.mapper.UserMapper;
+import com.testmaker.api.service.cookie.CookieServiceInterface;
+import com.testmaker.api.service.jwt.JwtServiceInterface;
 import com.testmaker.api.service.user.UserServiceInterface;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserServiceInterface userService;
+    private final CookieServiceInterface cookieService;
+    private final JwtServiceInterface jwtService;
 
     @PostMapping("/signup")
     public ResponseEntity<Object> signup(@Valid @RequestBody SignupRequest requestDto) {
@@ -42,8 +48,11 @@ public class AuthController {
     }
 
     @PostMapping("/verify/email")
-    public ResponseEntity<Object> verifyEmailAddress(@Valid @RequestBody ConfirmCodeRequest requestDto) {
-        UserResponse responseDto = UserMapper.toResponse(userService.verifyEmailAddress(requestDto));
+    public ResponseEntity<Object> verifyEmailAddress(@Valid @RequestBody ConfirmCodeRequest requestDto, HttpServletResponse response) {
+        User user = userService.verifyEmailAddress(requestDto);
+        String token = jwtService.generateToken(user);
+        response.addCookie(cookieService.create("access_token", token));
+        UserResponse responseDto = UserMapper.toResponse(user);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
