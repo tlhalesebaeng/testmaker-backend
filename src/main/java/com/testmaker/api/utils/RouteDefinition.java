@@ -1,5 +1,6 @@
 package com.testmaker.api.utils;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.util.AntPathMatcher;
 
 public class RouteDefinition {
@@ -11,5 +12,9 @@ public class RouteDefinition {
         this.URI = URI;
         this.method = method;
         this.matcher = new AntPathMatcher();
+    }
+
+    public HttpMethod getMethod() {
+        return HttpMethod.valueOf(this.method);
     }
 }
