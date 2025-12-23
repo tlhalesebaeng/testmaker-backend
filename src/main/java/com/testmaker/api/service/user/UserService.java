@@ -39,7 +39,7 @@ public class UserService implements UserServiceInterface{
 
     @Override
     public User verifyEmailAddress(ConfirmCodeRequest requestDto) {
-        Optional<User> optionalUser = userRepo.findByEmailVerificationCodeAndStatus(requestDto.getCode(), Status.PENDING_EMAIL_VERIFICATION);
+        Optional<User> optionalUser = userRepo.findByValidEmailVerificationCode(requestDto.getCode(), LocalDateTime.now(), Status.PENDING_EMAIL_VERIFICATION);
         User user = optionalUser.orElseThrow(() -> new InvalidVerificationCodeException("Invalid code provided! Please check your code and try again"));
         user.setStatus(Status.ACTIVE);
         return userRepo.save(user);
