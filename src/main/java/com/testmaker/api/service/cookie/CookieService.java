@@ -1,4 +1,4 @@
 package com.testmaker.api.service.cookie;
 
-public class CookieService {
+public class CookieService implements CookieServiceInterface{
 }
