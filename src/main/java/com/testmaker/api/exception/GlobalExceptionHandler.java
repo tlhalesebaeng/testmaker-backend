@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler({ InvalidVerificationCodeException.class })
+    public ResponseEntity<ExceptionResponse> handleInvalidVerificationCodeException(RuntimeException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(e.getMessage()));
+    }
+
     @ExceptionHandler({ MethodArgumentNotValidException.class })
     public ResponseEntity<ExceptionResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
         ObjectError error = e.getBindingResult().getAllErrors().get(0); // Get the first error that caused this exception
