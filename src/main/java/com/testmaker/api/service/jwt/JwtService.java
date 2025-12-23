@@ -5,6 +5,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -39,5 +40,13 @@ public class JwtService implements JwtServiceInterface{
         jwtBuilder.setSigningKey(this.getKey());
         JwtParser jwtParser = jwtBuilder.build();
         return jwtParser.parseClaimsJws(token).getBody();
+    }
+
+    @Override
+    public boolean validateToken(String token, UserDetails userDetails) {
+        Claims claims = this.getAllClaims(token);
+        boolean usernamesMatch = userDetails.getUsername().equals(claims.getSubject());
+        boolean tokenExpired = claims.getExpiration().before(new Date());
+        return usernamesMatch && !tokenExpired;
     }
 }
