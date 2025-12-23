@@ -24,7 +24,7 @@ public class AuthController {
     private final JwtServiceInterface jwtService;
 
     @PostMapping("/signup")
-    public ResponseEntity<Object> signup(@Valid @RequestBody SignupRequest requestDto) {
+    public ResponseEntity<UserResponse> signup(@Valid @RequestBody SignupRequest requestDto) {
         UserResponse responseDto = UserMapper.toResponse(userService.createUser(requestDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
@@ -45,7 +45,7 @@ public class AuthController {
     }
 
     @PostMapping("/verify/email")
-    public ResponseEntity<Object> verifyEmailAddress(@Valid @RequestBody ConfirmCodeRequest requestDto, HttpServletResponse response) {
+    public ResponseEntity<UserResponse> verifyEmailAddress(@Valid @RequestBody ConfirmCodeRequest requestDto, HttpServletResponse response) {
         User user = userService.verifyEmailAddress(requestDto);
         String token = jwtService.generateToken(user);
         response.addCookie(cookieService.create("access_token", token));
