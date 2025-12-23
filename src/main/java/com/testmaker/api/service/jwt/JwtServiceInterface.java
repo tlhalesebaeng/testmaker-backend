@@ -1,4 +1,7 @@
 package com.testmaker.api.service.jwt;
 
-public class JwtServiceInterface {
+import com.testmaker.api.entity.User;
+
+public interface JwtServiceInterface {
+    String generateToken(User user);
 }
