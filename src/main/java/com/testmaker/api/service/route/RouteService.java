@@ -1,9 +1,11 @@
 package com.testmaker.api.service.route;
 
 import com.testmaker.api.utils.Route;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class RouteService implements RouteServiceInterface{
     @Override
     public List<Route> getProtected() {
