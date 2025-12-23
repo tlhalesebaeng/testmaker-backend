@@ -1,4 +1,4 @@
 package com.testmaker.api.service.route;
 
-public class RouteService {
+public class RouteService implements RouteServiceInterface{
 }
