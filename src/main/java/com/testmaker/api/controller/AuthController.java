@@ -7,6 +7,8 @@ import com.testmaker.api.mapper.UserMapper;
 import com.testmaker.api.service.cookie.CookieServiceInterface;
 import com.testmaker.api.service.jwt.JwtServiceInterface;
 import com.testmaker.api.service.user.UserServiceInterface;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +26,9 @@ public class AuthController {
     private final JwtServiceInterface jwtService;
 
     @PostMapping("/signup")
-    public ResponseEntity<UserResponse> signup(@Valid @RequestBody SignupRequest requestDto) {
+    public ResponseEntity<AuthResponse> signup(@Valid @RequestBody SignupRequest requestDto) {
         UserResponse responseDto = UserMapper.toResponse(userService.createUser(requestDto));
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(false, responseDto));
     }
 
     @PostMapping("/login")
