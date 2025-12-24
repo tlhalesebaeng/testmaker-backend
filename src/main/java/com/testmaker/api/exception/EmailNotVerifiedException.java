@@ -1,4 +1,4 @@
 package com.testmaker.api.exception;
 
-public class EmailNotVerifiedException {
+public class EmailNotVerifiedException extends RuntimeException {
 }
