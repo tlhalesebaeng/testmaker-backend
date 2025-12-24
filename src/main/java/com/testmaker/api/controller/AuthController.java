@@ -32,8 +32,12 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest requestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+    public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest requestDto, HttpServletResponse response) {
+        User user = userService.login(requestDto);
+        String token = jwtService.generateToken(user);
+        response.addCookie(cookieService.create("access_token", token));
+        UserResponse responseDto = UserMapper.toResponse(user);
+        return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(true, responseDto));
     }
 
     @PostMapping("/password/reset")
