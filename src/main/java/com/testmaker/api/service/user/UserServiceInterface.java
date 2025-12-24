@@ -7,4 +7,5 @@ import com.testmaker.api.entity.User;
 public interface UserServiceInterface {
     User createUser(SignupRequest requestDto);
     User verifyEmailAddress(ConfirmCodeRequest requestDto);
+    User checkAuth(String jwt);
 }
