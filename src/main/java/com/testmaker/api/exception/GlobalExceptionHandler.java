@@ -3,6 +3,8 @@ package com.testmaker.api.exception;
 import com.testmaker.api.dto.exception.ExceptionResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -11,7 +13,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler({ InvalidVerificationCodeException.class })
+    @ExceptionHandler({
+            InvalidVerificationCodeException.class,
+            EmailNotVerifiedException.class
+    })
     public ResponseEntity<ExceptionResponse> handleInvalidVerificationCodeException(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(e.getMessage()));
     }
@@ -22,8 +27,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(error.getDefaultMessage()));
     }
 
-    @ExceptionHandler({ UsernameNotFoundException.class })
-    public ResponseEntity<ExceptionResponse> handleUsernameNotFoundException(UsernameNotFoundException e) {
+    @ExceptionHandler({ UsernameNotFoundException.class, BadCredentialsException.class })
+    public ResponseEntity<ExceptionResponse> handleUsernameNotFoundException(AuthenticationException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(e.getMessage()));
     }
 }
