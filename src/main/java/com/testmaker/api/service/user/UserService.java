@@ -5,8 +5,10 @@ import com.testmaker.api.dto.auth.SignupRequest;
 import com.testmaker.api.entity.User;
 import com.testmaker.api.exception.InvalidVerificationCodeException;
 import com.testmaker.api.repository.UserRepository;
+import com.testmaker.api.service.jwt.JwtServiceInterface;
 import com.testmaker.api.utils.Code;
 import com.testmaker.api.utils.Status;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -19,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService implements UserServiceInterface{
     private final UserRepository userRepo;
+    private final JwtServiceInterface jwtService;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Value("${api.email-verification-code.expiration}")
@@ -43,5 +46,19 @@ public class UserService implements UserServiceInterface{
         User user = optionalUser.orElseThrow(() -> new InvalidVerificationCodeException("Invalid code provided! Please check your code and try again"));
         user.setStatus(Status.ACTIVE);
         return userRepo.save(user);
+    }
+
+    @Override
+    public User checkAuth(String jwt) {
+        try {
+            Claims claims = jwtService.getAllClaims(jwt);
+            Optional<User> optionalUser = userRepo.findByUsername(claims.getSubject());
+            User user = optionalUser.orElseThrow(() -> new RuntimeException(""));
+            if(jwtService.validateToken(jwt, new PrincipalUserDetails(user))) return user;
+            return null;
+        } catch (Exception e) {
+            // All exceptions thrown are caught here because the most important thing is to determine if the user is authenticated or not
+            return null;
+        }
     }
 }
