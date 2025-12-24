@@ -21,9 +21,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("${api.prefix}/auth")
 @RequiredArgsConstructor
 public class AuthController {
+    private final JwtServiceInterface jwtService;
     private final UserServiceInterface userService;
     private final CookieServiceInterface cookieService;
-    private final JwtServiceInterface jwtService;
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> signup(@Valid @RequestBody SignupRequest requestDto) {
@@ -58,6 +58,13 @@ public class AuthController {
     @PatchMapping("/password/new")
     public ResponseEntity<Object> newPassword(@Valid @RequestBody NewPasswordRequest requestDto) {
         return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @GetMapping("/check")
+    public ResponseEntity<AuthResponse> checkAuth(@CookieValue(value = "access_token", required = false) String jwt) {
+        User user = userService.checkAuth(jwt);
+        if(user == null) return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(false, null));
+        return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(true, UserMapper.toResponse(user)));
     }
 
     @GetMapping("/logout")
