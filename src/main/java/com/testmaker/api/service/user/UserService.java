@@ -7,10 +7,12 @@ import com.testmaker.api.entity.User;
 import com.testmaker.api.exception.EmailNotVerifiedException;
 import com.testmaker.api.exception.InvalidVerificationCodeException;
 import com.testmaker.api.repository.UserRepository;
+import com.testmaker.api.service.cookie.CookieServiceInterface;
 import com.testmaker.api.service.jwt.JwtServiceInterface;
 import com.testmaker.api.utils.Code;
 import com.testmaker.api.utils.Status;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,11 +26,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService implements UserServiceInterface{
     private final UserRepository userRepo;
+    private final HttpServletResponse response;
     private final JwtServiceInterface jwtService;
+    private final CookieServiceInterface cookieService;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Value("${api.email-verification-code.expiration}")
     private Integer emailVerificationCodeExpiration;
+
+    @Value("${api.cookies.auth.expiration}")
+    private Long cookieExpiration; // In milliseconds
 
     @Override
     public User createUser(SignupRequest requestDto) {
@@ -46,9 +53,12 @@ public class UserService implements UserServiceInterface{
     @Override
     public User verifyEmailAddress(ConfirmCodeRequest requestDto) {
         Optional<User> optionalUser = userRepo.findByValidEmailVerificationCode(requestDto.getCode(), LocalDateTime.now(), Status.PENDING_EMAIL_VERIFICATION);
-        User user = optionalUser.orElseThrow(() -> new InvalidVerificationCodeException("Invalid code provided! Please check your code and try again"));
-        user.setStatus(Status.ACTIVE);
-        return userRepo.save(user);
+        User dbUser = optionalUser.orElseThrow(() -> new InvalidVerificationCodeException("Invalid code provided! Please check your code and try again"));
+        dbUser.setStatus(Status.ACTIVE);
+        User user = userRepo.save(dbUser);
+        String token = jwtService.generateToken(user);
+        response.addCookie(cookieService.create("access_token", token, null));
+        return user;
     }
 
     @Override
@@ -64,6 +74,12 @@ public class UserService implements UserServiceInterface{
         }
 
         if(passwordEncoder.matches(requestDto.getPassword(), user.getPassword())){
+            String token = jwtService.generateToken(user);
+            if(requestDto.getRememberUser()) {
+                response.addCookie(cookieService.create("access_token", token, Math.toIntExact(cookieExpiration))); // Max age should be in seconds
+            } else {
+                response.addCookie(cookieService.create("access_token", token, null)); // Max age should be in seconds
+            }
             return user;
         } else {
             throw new BadCredentialsException("Incorrect credentials! Please check your credentials and try again");

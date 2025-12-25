@@ -34,15 +34,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest requestDto, HttpServletResponse response) {
-        User user = userService.login(requestDto);
-        String token = jwtService.generateToken(user);
-        UserResponse responseDto = UserMapper.toResponse(user);
-        if(requestDto.getRememberUser()) {
-            response.addCookie(cookieService.create("access_token", token, Math.toIntExact(cookieExpiration))); // Max age should be in seconds
-        } else {
-            response.addCookie(cookieService.create("access_token", token, null)); // Max age should be in seconds
-        }
+    public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest requestDto) {
+        UserResponse responseDto = UserMapper.toResponse(userService.login(requestDto));
         return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(true, responseDto));
     }
 
@@ -57,11 +50,8 @@ public class AuthController {
     }
 
     @PostMapping("/verify/email")
-    public ResponseEntity<UserResponse> verifyEmailAddress(@Valid @RequestBody ConfirmCodeRequest requestDto, HttpServletResponse response) {
-        User user = userService.verifyEmailAddress(requestDto);
-        String token = jwtService.generateToken(user);
-        response.addCookie(cookieService.create("access_token", token, null));
-        UserResponse responseDto = UserMapper.toResponse(user);
+    public ResponseEntity<UserResponse> verifyEmailAddress(@Valid @RequestBody ConfirmCodeRequest requestDto) {
+        UserResponse responseDto = UserMapper.toResponse(userService.verifyEmailAddress(requestDto));
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
