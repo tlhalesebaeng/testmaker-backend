@@ -99,4 +99,9 @@ public class UserService implements UserServiceInterface{
             return null;
         }
     }
+
+    @Override
+    public void logout() {
+        response.addCookie(cookieService.create("access_token", "", null));
+    }
 }
