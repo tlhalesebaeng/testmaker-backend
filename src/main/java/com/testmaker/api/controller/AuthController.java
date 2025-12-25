@@ -7,11 +7,10 @@ import com.testmaker.api.mapper.UserMapper;
 import com.testmaker.api.service.cookie.CookieServiceInterface;
 import com.testmaker.api.service.jwt.JwtServiceInterface;
 import com.testmaker.api.service.user.UserServiceInterface;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,6 +24,9 @@ public class AuthController {
     private final UserServiceInterface userService;
     private final CookieServiceInterface cookieService;
 
+    @Value("${api.cookies.auth.expiration}")
+    private Long cookieExpiration; // In milliseconds
+
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> signup(@Valid @RequestBody SignupRequest requestDto) {
         UserResponse responseDto = UserMapper.toResponse(userService.createUser(requestDto));
@@ -35,8 +37,12 @@ public class AuthController {
     public ResponseEntity<Object> login(@Valid @RequestBody LoginRequest requestDto, HttpServletResponse response) {
         User user = userService.login(requestDto);
         String token = jwtService.generateToken(user);
-        response.addCookie(cookieService.create("access_token", token));
         UserResponse responseDto = UserMapper.toResponse(user);
+        if(requestDto.getRememberUser()) {
+            response.addCookie(cookieService.create("access_token", token, Math.toIntExact(cookieExpiration))); // Max age should be in seconds
+        } else {
+            response.addCookie(cookieService.create("access_token", token, null)); // Max age should be in seconds
+        }
         return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(true, responseDto));
     }
 
@@ -54,7 +60,7 @@ public class AuthController {
     public ResponseEntity<UserResponse> verifyEmailAddress(@Valid @RequestBody ConfirmCodeRequest requestDto, HttpServletResponse response) {
         User user = userService.verifyEmailAddress(requestDto);
         String token = jwtService.generateToken(user);
-        response.addCookie(cookieService.create("access_token", token));
+        response.addCookie(cookieService.create("access_token", token, null));
         UserResponse responseDto = UserMapper.toResponse(user);
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
@@ -73,7 +79,7 @@ public class AuthController {
 
     @GetMapping("/logout")
     public ResponseEntity<Object> logout(HttpServletResponse response) {
-        response.addCookie(cookieService.create("access_token", ""));
+        response.addCookie(cookieService.create("access_token", "", null));
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 }
