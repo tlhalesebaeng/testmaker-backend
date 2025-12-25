@@ -7,7 +7,6 @@ import com.testmaker.api.mapper.UserMapper;
 import com.testmaker.api.service.cookie.CookieServiceInterface;
 import com.testmaker.api.service.jwt.JwtServiceInterface;
 import com.testmaker.api.service.user.UserServiceInterface;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -68,8 +67,8 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public ResponseEntity<Object> logout(HttpServletResponse response) {
-        response.addCookie(cookieService.create("access_token", "", null));
+    public ResponseEntity<Object> logout() {
+        userService.logout();
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 }
