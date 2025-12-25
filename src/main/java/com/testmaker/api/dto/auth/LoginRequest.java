@@ -12,4 +12,6 @@ public class LoginRequest {
 
     @NotBlank(message = "Password required! Please provide a valid password")
     private String password;
+
+    private Boolean rememberUser;
 }
