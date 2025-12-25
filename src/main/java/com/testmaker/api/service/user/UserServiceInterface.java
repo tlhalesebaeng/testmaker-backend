@@ -10,4 +10,5 @@ public interface UserServiceInterface {
     User verifyEmailAddress(ConfirmCodeRequest requestDto);
     User checkAuth(String jwt);
     User login(LoginRequest requestDto);
+    void logout();
 }
