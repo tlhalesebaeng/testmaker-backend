@@ -4,12 +4,9 @@ import com.testmaker.api.dto.auth.*;
 import com.testmaker.api.dto.user.UserResponse;
 import com.testmaker.api.entity.User;
 import com.testmaker.api.mapper.UserMapper;
-import com.testmaker.api.service.cookie.CookieServiceInterface;
-import com.testmaker.api.service.jwt.JwtServiceInterface;
 import com.testmaker.api.service.user.UserServiceInterface;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,12 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("${api.prefix}/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final JwtServiceInterface jwtService;
     private final UserServiceInterface userService;
-    private final CookieServiceInterface cookieService;
-
-    @Value("${api.cookies.auth.expiration}")
-    private Long cookieExpiration; // In milliseconds
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> signup(@Valid @RequestBody SignupRequest requestDto) {
