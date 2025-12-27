@@ -31,8 +31,9 @@ public class AuthController {
     }
 
     @PostMapping("/password/reset")
-    public ResponseEntity<Object> resetPassword(@Valid @RequestBody ResetPasswordRequest requestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+    public ResponseEntity<AuthResponse> resetPassword(@Valid @RequestBody ResetPasswordRequest requestDto) {
+        UserResponse responseDto = UserMapper.toResponse(userService.resetPassword(requestDto));
+        return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(false, responseDto));
     }
 
     @PostMapping("/code")
