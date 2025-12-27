@@ -73,6 +73,12 @@ public class UserService implements UserServiceInterface{
     }
 
     @Override
+    public User confirmPasswordResetCode(ConfirmCodeRequest requestDto) {
+        Optional<User> optionalUser = userRepo.findByValidPasswordResetCode(requestDto.getCode(), LocalDateTime.now());
+        return optionalUser.orElseThrow(() -> new InvalidVerificationCodeException("Invalid code provided! Please check your code and try again"));
+    }
+
+    @Override
     public User login(LoginRequest requestDto) {
         Optional<User> optionalUser = userRepo.findByUsername(requestDto.getUsername());
         User user = optionalUser.orElseThrow(() -> new BadCredentialsException("Incorrect credentials! Please check your credentials and try again"));
