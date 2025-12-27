@@ -2,6 +2,7 @@ package com.testmaker.api.service.user;
 
 import com.testmaker.api.dto.auth.ConfirmCodeRequest;
 import com.testmaker.api.dto.auth.LoginRequest;
+import com.testmaker.api.dto.auth.ResetPasswordRequest;
 import com.testmaker.api.dto.auth.SignupRequest;
 import com.testmaker.api.entity.User;
 import com.testmaker.api.exception.EmailNotVerifiedException;
@@ -16,6 +17,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -59,6 +61,15 @@ public class UserService implements UserServiceInterface{
         String token = jwtService.generateToken(user);
         response.addCookie(cookieService.create("access_token", token, null));
         return user;
+    }
+
+    @Override
+    public User resetPassword(ResetPasswordRequest requestDto) {
+        Optional<User> optionalUser = userRepo.findByUsername(requestDto.getUsername());
+        User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found. Please verify your username and try again"));
+        user.setPasswordResetCode(Code.generate());
+        user.setPasswordResetCodeExpiration(LocalDateTime.now().plusMinutes(emailVerificationCodeExpiration));
+        return userRepo.save(user);
     }
 
     @Override
