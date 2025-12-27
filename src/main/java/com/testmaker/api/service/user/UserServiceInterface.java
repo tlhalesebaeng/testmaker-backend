@@ -1,9 +1,6 @@
 package com.testmaker.api.service.user;
 
-import com.testmaker.api.dto.auth.VerifyCodeRequest;
-import com.testmaker.api.dto.auth.LoginRequest;
-import com.testmaker.api.dto.auth.ForgotPasswordRequest;
-import com.testmaker.api.dto.auth.SignupRequest;
+import com.testmaker.api.dto.auth.*;
 import com.testmaker.api.entity.User;
 
 public interface UserServiceInterface {
@@ -11,7 +8,9 @@ public interface UserServiceInterface {
     User verifyEmailAddress(VerifyCodeRequest requestDto);
     User forgotPassword(ForgotPasswordRequest requestDto);
     User verifyPasswordResetCode(VerifyCodeRequest requestDto);
+    User resetPassword(ResetPasswordRequest requestDto, Integer code);
     User checkAuth(String jwt);
     User login(LoginRequest requestDto);
     void logout();
+
 }
