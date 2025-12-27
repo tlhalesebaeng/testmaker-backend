@@ -2,7 +2,7 @@ package com.testmaker.api.service.user;
 
 import com.testmaker.api.dto.auth.VerifyCodeRequest;
 import com.testmaker.api.dto.auth.LoginRequest;
-import com.testmaker.api.dto.auth.ResetPasswordRequest;
+import com.testmaker.api.dto.auth.ForgotPasswordRequest;
 import com.testmaker.api.dto.auth.SignupRequest;
 import com.testmaker.api.entity.User;
 import com.testmaker.api.exception.EmailNotVerifiedException;
@@ -64,7 +64,7 @@ public class UserService implements UserServiceInterface{
     }
 
     @Override
-    public User forgotPassword(ResetPasswordRequest requestDto) {
+    public User forgotPassword(ForgotPasswordRequest requestDto) {
         Optional<User> optionalUser = userRepo.findByUsername(requestDto.getUsername());
         User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found. Please verify your username and try again"));
         user.setPasswordResetCode(Code.generate());

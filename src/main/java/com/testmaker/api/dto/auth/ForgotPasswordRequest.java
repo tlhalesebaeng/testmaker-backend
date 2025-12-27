@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ResetPasswordRequest {
+public class ForgotPasswordRequest {
     @NotBlank(message = "Username required! Please provide a valid username")
     private String username;
 }
