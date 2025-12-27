@@ -15,7 +15,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
     @ExceptionHandler({
             InvalidVerificationCodeException.class,
-            EmailNotVerifiedException.class
+            EmailNotVerifiedException.class,
+            PasswordsDoNotMatchException.class
     })
     public ResponseEntity<ExceptionResponse> handleInvalidVerificationCodeException(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(e.getMessage()));
