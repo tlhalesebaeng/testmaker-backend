@@ -1,12 +1,10 @@
 package com.testmaker.api.service.user;
 
-import com.testmaker.api.dto.auth.VerifyCodeRequest;
-import com.testmaker.api.dto.auth.LoginRequest;
-import com.testmaker.api.dto.auth.ForgotPasswordRequest;
-import com.testmaker.api.dto.auth.SignupRequest;
+import com.testmaker.api.dto.auth.*;
 import com.testmaker.api.entity.User;
 import com.testmaker.api.exception.EmailNotVerifiedException;
 import com.testmaker.api.exception.InvalidVerificationCodeException;
+import com.testmaker.api.exception.PasswordsDoNotMatchException;
 import com.testmaker.api.repository.UserRepository;
 import com.testmaker.api.service.cookie.CookieServiceInterface;
 import com.testmaker.api.service.jwt.JwtServiceInterface;
@@ -76,6 +74,21 @@ public class UserService implements UserServiceInterface{
     public User verifyPasswordResetCode(VerifyCodeRequest requestDto) {
         Optional<User> optionalUser = userRepo.findByValidPasswordResetCode(requestDto.getCode(), LocalDateTime.now());
         return optionalUser.orElseThrow(() -> new InvalidVerificationCodeException("Invalid code provided! Please check your code and try again"));
+    }
+
+    @Override
+    public User resetPassword(ResetPasswordRequest requestDto, Integer code) {
+        if(!requestDto.getPassword().equals(requestDto.getConfirmPassword())) {
+            throw new PasswordsDoNotMatchException("Passwords do not match! Please confirm your password");
+        }
+
+        Optional<User> optionalUser = userRepo.findByValidPasswordResetCode(code, LocalDateTime.now());
+        User dbUser = optionalUser.orElseThrow(() -> new InvalidVerificationCodeException("Invalid code provided! Please check your code and try again"));
+        dbUser.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        User user = userRepo.save(dbUser);
+        String token = jwtService.generateToken(user);
+        response.addCookie(cookieService.create("access_token", token, null));
+        return user;
     }
 
     @Override
