@@ -13,4 +13,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.emailVerificationCode = :code AND u.emailVerificationCodeExpiration > :date AND u.status = :status")
     Optional<User> findByValidEmailVerificationCode(Integer code, LocalDateTime date, Status status);
+
+    @Query("SELECT u From User u WHERE u.passwordResetCode = :code AND u.passwordResetCodeExpiration > :date")
+    Optional<User> findByValidPasswordResetCode(Integer code, LocalDateTime date);
 }
