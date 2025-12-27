@@ -37,8 +37,8 @@ public class AuthController {
     }
 
     @PostMapping("/verify/code")
-    public ResponseEntity<Object> confirmCode(@Valid @RequestBody ConfirmCodeRequest requestDto) {
-        UserResponse responseDto = UserMapper.toResponse(userService.confirmPasswordResetCode(requestDto));
+    public ResponseEntity<Object> verifyPasswordResetCode(@Valid @RequestBody ConfirmCodeRequest requestDto) {
+        UserResponse responseDto = UserMapper.toResponse(userService.verifyPasswordResetCode(requestDto));
         return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(false, responseDto));
     }
 
