@@ -3,7 +3,7 @@ package com.testmaker.api.service.auth;
 import com.testmaker.api.dto.auth.*;
 import com.testmaker.api.entity.User;
 
-public interface UserServiceInterface {
+public interface AuthServiceInterface {
     User createUser(SignupRequest requestDto);
     User verifyEmailAddress(VerifyCodeRequest requestDto);
     User forgotPassword(ForgotPasswordRequest requestDto);

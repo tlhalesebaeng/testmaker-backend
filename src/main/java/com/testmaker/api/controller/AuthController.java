@@ -4,7 +4,7 @@ import com.testmaker.api.dto.auth.*;
 import com.testmaker.api.dto.user.UserResponse;
 import com.testmaker.api.entity.User;
 import com.testmaker.api.mapper.UserMapper;
-import com.testmaker.api.service.auth.UserServiceInterface;
+import com.testmaker.api.service.auth.AuthServiceInterface;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("${api.prefix}/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final UserServiceInterface userService;
+    private final AuthServiceInterface userService;
 
     @PostMapping("/signup")
     public ResponseEntity<AuthResponse> signup(@Valid @RequestBody SignupRequest requestDto) {

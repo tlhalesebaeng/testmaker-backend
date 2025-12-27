@@ -25,7 +25,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserServiceInterface {
+public class AuthService implements AuthServiceInterface {
     private final UserRepository userRepo;
     private final HttpServletResponse response;
     private final JwtServiceInterface jwtService;
