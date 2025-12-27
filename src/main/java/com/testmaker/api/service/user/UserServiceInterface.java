@@ -10,6 +10,7 @@ public interface UserServiceInterface {
     User createUser(SignupRequest requestDto);
     User verifyEmailAddress(ConfirmCodeRequest requestDto);
     User resetPassword(ResetPasswordRequest requestDto);
+    User confirmPasswordResetCode(ConfirmCodeRequest requestDto);
     User checkAuth(String jwt);
     User login(LoginRequest requestDto);
     void logout();
