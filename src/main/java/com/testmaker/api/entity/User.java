@@ -23,6 +23,8 @@ public class User {
     private String username;
     private String email;
     private String password;
+    private Integer passwordResetCode;
     private Integer emailVerificationCode;
+    private LocalDateTime passwordResetCodeExpiration;
     private LocalDateTime emailVerificationCodeExpiration;
 }
