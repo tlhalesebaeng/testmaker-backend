@@ -1,4 +1,4 @@
-package com.testmaker.api.service.user;
+package com.testmaker.api.service.auth;
 
 import com.testmaker.api.dto.auth.*;
 import com.testmaker.api.entity.User;

@@ -1,4 +1,4 @@
-package com.testmaker.api.service.user;
+package com.testmaker.api.service.auth;
 
 import com.testmaker.api.dto.auth.*;
 import com.testmaker.api.entity.User;
@@ -8,6 +8,7 @@ import com.testmaker.api.exception.PasswordsDoNotMatchException;
 import com.testmaker.api.repository.UserRepository;
 import com.testmaker.api.service.cookie.CookieServiceInterface;
 import com.testmaker.api.service.jwt.JwtServiceInterface;
+import com.testmaker.api.service.user.PrincipalUserDetails;
 import com.testmaker.api.utils.Code;
 import com.testmaker.api.utils.Status;
 import io.jsonwebtoken.Claims;
@@ -24,7 +25,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements UserServiceInterface{
+public class UserService implements UserServiceInterface {
     private final UserRepository userRepo;
     private final HttpServletResponse response;
     private final JwtServiceInterface jwtService;

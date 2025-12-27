@@ -4,7 +4,7 @@ import com.testmaker.api.dto.auth.*;
 import com.testmaker.api.dto.user.UserResponse;
 import com.testmaker.api.entity.User;
 import com.testmaker.api.mapper.UserMapper;
-import com.testmaker.api.service.user.UserServiceInterface;
+import com.testmaker.api.service.auth.UserServiceInterface;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
