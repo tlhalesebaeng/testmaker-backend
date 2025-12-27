@@ -9,7 +9,7 @@ import com.testmaker.api.entity.User;
 public interface UserServiceInterface {
     User createUser(SignupRequest requestDto);
     User verifyEmailAddress(VerifyCodeRequest requestDto);
-    User resetPassword(ResetPasswordRequest requestDto);
+    User forgotPassword(ResetPasswordRequest requestDto);
     User verifyPasswordResetCode(VerifyCodeRequest requestDto);
     User checkAuth(String jwt);
     User login(LoginRequest requestDto);

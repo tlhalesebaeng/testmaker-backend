@@ -64,7 +64,7 @@ public class UserService implements UserServiceInterface{
     }
 
     @Override
-    public User resetPassword(ResetPasswordRequest requestDto) {
+    public User forgotPassword(ResetPasswordRequest requestDto) {
         Optional<User> optionalUser = userRepo.findByUsername(requestDto.getUsername());
         User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found. Please verify your username and try again"));
         user.setPasswordResetCode(Code.generate());
