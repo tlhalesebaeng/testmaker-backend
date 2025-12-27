@@ -18,7 +18,7 @@ public class PrincipalUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> optionalUser = userRepo.findByUsername(username);
-        User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("No user was found with this username. Please check your username and try again"));
+        User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found. Please verify your username and try again"));
         return new PrincipalUserDetails(user);
     }
 }
