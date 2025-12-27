@@ -1,6 +1,6 @@
 package com.testmaker.api.service.user;
 
-import com.testmaker.api.dto.auth.ConfirmCodeRequest;
+import com.testmaker.api.dto.auth.VerifyCodeRequest;
 import com.testmaker.api.dto.auth.LoginRequest;
 import com.testmaker.api.dto.auth.ResetPasswordRequest;
 import com.testmaker.api.dto.auth.SignupRequest;
@@ -53,7 +53,7 @@ public class UserService implements UserServiceInterface{
     }
 
     @Override
-    public User verifyEmailAddress(ConfirmCodeRequest requestDto) {
+    public User verifyEmailAddress(VerifyCodeRequest requestDto) {
         Optional<User> optionalUser = userRepo.findByValidEmailVerificationCode(requestDto.getCode(), LocalDateTime.now(), Status.PENDING_EMAIL_VERIFICATION);
         User dbUser = optionalUser.orElseThrow(() -> new InvalidVerificationCodeException("Invalid code provided! Please check your code and try again"));
         dbUser.setStatus(Status.ACTIVE);
@@ -73,7 +73,7 @@ public class UserService implements UserServiceInterface{
     }
 
     @Override
-    public User verifyPasswordResetCode(ConfirmCodeRequest requestDto) {
+    public User verifyPasswordResetCode(VerifyCodeRequest requestDto) {
         Optional<User> optionalUser = userRepo.findByValidPasswordResetCode(requestDto.getCode(), LocalDateTime.now());
         return optionalUser.orElseThrow(() -> new InvalidVerificationCodeException("Invalid code provided! Please check your code and try again"));
     }

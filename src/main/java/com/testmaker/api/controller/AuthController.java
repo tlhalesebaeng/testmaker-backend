@@ -37,13 +37,13 @@ public class AuthController {
     }
 
     @PostMapping("/verify/code")
-    public ResponseEntity<Object> verifyPasswordResetCode(@Valid @RequestBody ConfirmCodeRequest requestDto) {
+    public ResponseEntity<Object> verifyPasswordResetCode(@Valid @RequestBody VerifyCodeRequest requestDto) {
         UserResponse responseDto = UserMapper.toResponse(userService.verifyPasswordResetCode(requestDto));
         return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(false, responseDto));
     }
 
     @PostMapping("/verify/email")
-    public ResponseEntity<AuthResponse> verifyEmailAddress(@Valid @RequestBody ConfirmCodeRequest requestDto) {
+    public ResponseEntity<AuthResponse> verifyEmailAddress(@Valid @RequestBody VerifyCodeRequest requestDto) {
         UserResponse responseDto = UserMapper.toResponse(userService.verifyEmailAddress(requestDto));
         return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(true, responseDto));
     }

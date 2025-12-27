@@ -8,7 +8,7 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ConfirmCodeRequest {
+public class VerifyCodeRequest {
     @NotNull(message = "Verification code required! Please provide a valid verification code")
     @Min(value = 100000, message = "Invalid code provided! Please provide a 6 digit code")
     @Max(value = 999999, message = "Invalid code provided! Please provide a 6 digit code")
