@@ -10,6 +10,18 @@
             <level>INFO</level>
         </filter>
     </appender>
+    <appender name="REQUESTS_LOGS" class="ch.qos.logback.core.FileAppender">
+        <file>${LOGS_HOME}/${REQUESTS_LOGS_FILE_NAME}.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+    </appender>
+    <logger name="co.za.tlhalefosebaeng.leagueoracle.filters.RequestsLoggerFilter" level="INFO" addivity="false">
+        <appender-ref ref="REQUESTS_LOGS"/>
+    </logger>
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
     </root>
