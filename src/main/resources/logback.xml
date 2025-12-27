@@ -19,7 +19,7 @@
             <level>DEBUG</level>
         </filter>
     </appender>
-    <logger name="co.za.tlhalefosebaeng.leagueoracle.filters.RequestsLoggerFilter" level="INFO" addivity="false">
+    <logger name="com.testmaker.api.filter.RequestsLoggerFilter" level="INFO" addivity="false">
         <appender-ref ref="REQUESTS_LOGS"/>
     </logger>
     <root level="INFO">
