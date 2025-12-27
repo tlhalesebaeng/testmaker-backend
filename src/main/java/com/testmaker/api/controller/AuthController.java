@@ -49,8 +49,9 @@ public class AuthController {
     }
 
     @PatchMapping("/password/new")
-    public ResponseEntity<Object> newPassword(@Valid @RequestBody NewPasswordRequest requestDto) {
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+    public ResponseEntity<Object> resetPassword(@Valid @RequestBody ResetPasswordRequest requestDto, @RequestParam Integer code) {
+        UserResponse responseDto = UserMapper.toResponse(userService.resetPassword(requestDto, code));
+        return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(true, responseDto));
     }
 
     @GetMapping("/check")
