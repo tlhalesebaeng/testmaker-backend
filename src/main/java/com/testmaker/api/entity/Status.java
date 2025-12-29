@@ -20,4 +20,8 @@ public class Status {
     private Collection<User> user;
 
     private String name;
+
+    public Status(String name) {
+        this.name = name;
+    }
 }
