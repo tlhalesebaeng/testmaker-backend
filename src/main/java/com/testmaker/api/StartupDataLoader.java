@@ -19,10 +19,8 @@ public class StartupDataLoader {
     @EventListener(ApplicationReadyEvent.class)
     public void insertStatusData() {
         // Ensure that the statuses we are inserting do not exist in the database
-        List<Status> statuses = Arrays.stream(AccountStatus.values())
-                .map(s -> new Status(s.name()))
-                .filter(s -> !statusRepo.existsByName(s.getName()))
-                .toList();
+        List<Status> statuses = Arrays.stream(AccountStatus.values()).map(Status::new)
+                .filter(s -> !statusRepo.existsByName(s.getName())).toList();
 
         statusRepo.saveAll(statuses);
     }

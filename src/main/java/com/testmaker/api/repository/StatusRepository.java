@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface StatusRepository extends JpaRepository<Status, Long> {
     Optional<Status> findByName(AccountStatus accountStatus);
-    boolean existsByName(String name);
+    boolean existsByName(AccountStatus status);
 }
