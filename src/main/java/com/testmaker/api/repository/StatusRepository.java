@@ -1,4 +1,7 @@
 package com.testmaker.api.repository;
 
-public interface StatusRepository {
+import com.testmaker.api.entity.Status;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface StatusRepository extends JpaRepository<Status, Long> {
 }
