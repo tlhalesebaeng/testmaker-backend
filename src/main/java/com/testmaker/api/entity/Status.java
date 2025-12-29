@@ -1,6 +1,5 @@
 package com.testmaker.api.entity;
 
-import com.testmaker.api.utils.AccountStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,9 +16,8 @@ public class Status {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(value = EnumType.STRING)
-    private AccountStatus name;
-
     @OneToMany(mappedBy = "status")
     private Collection<User> user;
+
+    private String name;
 }
