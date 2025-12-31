@@ -18,6 +18,7 @@ import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -44,6 +45,15 @@ public class AuthService implements AuthServiceInterface {
 
     @Override
     public User createUser(SignupRequest requestDto) {
+        // Validate the uniqueness of the user's email and username
+        Optional<User> optionalUser = userRepo.findByUsername(requestDto.getUsername());
+        if(optionalUser.isPresent()) {
+            if(optionalUser.get().getEmail().equals(requestDto.getEmail())) {
+                throw new DuplicateKeyException("A user with this email already exists! Please check your email or use a different one");
+            }
+            throw new DuplicateKeyException("A user with this username already exists! Please check your username or use a different one");
+        }
+
         Optional<Status> status = statusRepo.findByName(AccountStatus.PENDING_EMAIL_VERIFICATION);
         User user = new User();
         user.setEmail(requestDto.getEmail());
