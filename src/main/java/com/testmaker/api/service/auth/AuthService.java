@@ -58,10 +58,11 @@ public class AuthService implements AuthServiceInterface {
 
     @Override
     public User verifyEmailAddress(VerifyCodeRequest requestDto) {
-        Optional<Status> status = statusRepo.findByName(AccountStatus.ACTIVE);
-        Optional<User> optionalUser = userRepo.findByValidEmailVerificationCode(requestDto.getCode(), LocalDateTime.now(), AccountStatus.PENDING_EMAIL_VERIFICATION);
+        Optional<Status> optionalStatus = statusRepo.findByName(AccountStatus.PENDING_EMAIL_VERIFICATION);
+        Status status = optionalStatus.orElseThrow(() -> new StatusNotFoundException("Couldn't sign up! Please try again later"));
+        Optional<User> optionalUser = userRepo.findByValidEmailVerificationCode(requestDto.getCode(), LocalDateTime.now(), status);
         User dbUser = optionalUser.orElseThrow(() -> new InvalidVerificationCodeException("Invalid code provided! Please check your code and try again"));
-        dbUser.setStatus(status.orElseThrow(() -> new StatusNotFoundException("Couldn't sign up! Please try again later")));
+        dbUser.setStatus(status);
         User user = userRepo.save(dbUser);
         String token = jwtService.generateToken(user);
         response.addCookie(cookieService.create("access_token", token, null));
