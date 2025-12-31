@@ -50,4 +50,10 @@ public class GlobalExceptionHandler {
         String message = "Your request violates the integrity of our application";
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(message));
     }
+
+    @ExceptionHandler({ Exception.class })
+    public ResponseEntity<ExceptionResponse> handleUncaughtExceptions() {
+        String message = "Something went very wrong! Please try again later";
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionResponse(message));
+    }
 }
