@@ -13,6 +13,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler({
@@ -39,5 +41,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ DuplicateKeyException.class })
     public ResponseEntity<ExceptionResponse> handleDataIntegrityViolationExceptions(DataIntegrityViolationException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(e.getMessage()));
+    }
+
+    // Here we catch a constraint exception thrown while executing an SQL statement. We should not provide the user with the error message
+    // There is no feasible way to determine which constraint was violated so we provide a generic message. The service layer should make it hard for this exception to be thrown
+    @ExceptionHandler({ SQLIntegrityConstraintViolationException.class })
+    public ResponseEntity<ExceptionResponse> handleSQLIntegrityConstraintViolationException() {
+        String message = "Your request violates the integrity of our application";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(message));
     }
 }
