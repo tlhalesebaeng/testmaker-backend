@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
             PasswordsDoNotMatchException.class,
             StatusNotFoundException.class
     })
-    public ResponseEntity<ExceptionResponse> handleInvalidVerificationCodeException(RuntimeException e) {
+    public ResponseEntity<ExceptionResponse> handleCustomExceptions(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(e.getMessage()));
     }
 
@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({ UsernameNotFoundException.class, BadCredentialsException.class })
-    public ResponseEntity<ExceptionResponse> handleUsernameNotFoundException(AuthenticationException e) {
+    public ResponseEntity<ExceptionResponse> handleAuthenticationExceptions(AuthenticationException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(e.getMessage()));
     }
 
