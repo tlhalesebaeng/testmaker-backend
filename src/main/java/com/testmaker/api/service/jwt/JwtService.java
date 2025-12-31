@@ -1,6 +1,8 @@
 package com.testmaker.api.service.jwt;
 
 import com.testmaker.api.entity.User;
+import com.testmaker.api.exception.IncorrectAccountStatusException;
+import com.testmaker.api.utils.AccountStatus;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -26,6 +28,10 @@ public class JwtService implements JwtServiceInterface{
 
     @Override
     public String generateToken(User user) {
+        if(!user.getStatus().getName().equals(AccountStatus.ACTIVE)) {
+            throw new IncorrectAccountStatusException("Could not process request! Missing rights to perform this request");
+        }
+
         JwtBuilder jwtBuilder = Jwts.builder();
         jwtBuilder.setSubject(user.getUsername());
         jwtBuilder.setIssuedAt(new Date(System.currentTimeMillis()));
