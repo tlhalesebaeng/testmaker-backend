@@ -20,8 +20,12 @@ public class User {
     @JoinColumn(name = "status_id")
     private Status status;
 
+    @Column(unique = true)
     private String username;
+
+    @Column(unique = true)
     private String email;
+
     private String password;
     private Integer passwordResetCode;
     private Integer emailVerificationCode;
