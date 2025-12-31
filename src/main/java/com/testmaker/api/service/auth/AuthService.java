@@ -58,12 +58,22 @@ public class AuthService implements AuthServiceInterface {
 
     @Override
     public User verifyEmailAddress(VerifyCodeRequest requestDto) {
-        Optional<Status> optionalStatus = statusRepo.findByName(AccountStatus.PENDING_EMAIL_VERIFICATION);
-        Status status = optionalStatus.orElseThrow(() -> new StatusNotFoundException("Couldn't sign up! Please try again later"));
-        Optional<User> optionalUser = userRepo.findByValidEmailVerificationCode(requestDto.getCode(), LocalDateTime.now(), status);
+        // Find the pending email verification status from the database
+        Optional<Status> optionalPendingStatus = statusRepo.findByName(AccountStatus.PENDING_EMAIL_VERIFICATION);
+        Status pendingStatus = optionalPendingStatus.orElseThrow(() -> new StatusNotFoundException("Couldn't sign up! Please try again later"));
+
+        // Find the user with a valid email verification code
+        Optional<User> optionalUser = userRepo.findByValidEmailVerificationCode(requestDto.getCode(), LocalDateTime.now(), pendingStatus);
         User dbUser = optionalUser.orElseThrow(() -> new InvalidVerificationCodeException("Invalid code provided! Please check your code and try again"));
-        dbUser.setStatus(status);
+
+        // Find the active status from the database
+        Optional<Status> optionalActiveStatus = statusRepo.findByName(AccountStatus.ACTIVE);
+        Status activeStatus = optionalActiveStatus.orElseThrow(() -> new StatusNotFoundException("Couldn't sign up! Please try again later"));
+
+        // Change the user status to active
+        dbUser.setStatus(activeStatus);
         User user = userRepo.save(dbUser);
+
         String token = jwtService.generateToken(user);
         response.addCookie(cookieService.create("access_token", token, null));
         return user;
