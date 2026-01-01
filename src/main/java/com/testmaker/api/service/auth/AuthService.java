@@ -6,13 +6,11 @@ import com.testmaker.api.entity.ResetPasswordCode;
 import com.testmaker.api.entity.Status;
 import com.testmaker.api.entity.User;
 import com.testmaker.api.exception.*;
-import com.testmaker.api.repository.EmailVerificationCodeRepository;
 import com.testmaker.api.repository.StatusRepository;
 import com.testmaker.api.repository.UserRepository;
 import com.testmaker.api.service.cookie.CookieServiceInterface;
 import com.testmaker.api.service.jwt.JwtServiceInterface;
 import com.testmaker.api.service.user.PrincipalUserDetails;
-import com.testmaker.api.utils.Code;
 import com.testmaker.api.utils.AccountStatus;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,7 +34,6 @@ public class AuthService implements AuthServiceInterface {
     private final JwtServiceInterface jwtService;
     private final CookieServiceInterface cookieService;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final EmailVerificationCodeRepository emailVerificationCodeRepo;
 
     @Value("${api.email-verification-code.expiration}")
     private Integer emailVerificationCodeExpiration;
@@ -62,8 +59,7 @@ public class AuthService implements AuthServiceInterface {
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         user.setStatus(status.orElseThrow(() -> new StatusNotFoundException("Couldn't sign up! Please try again later")));
         // TODO: Send the user an email with the 6 digit verification code
-        EmailVerificationCode emailVerificationCode = emailVerificationCodeRepo.save(new EmailVerificationCode(emailVerificationCodeExpiration));
-        user.setEmailVerificationCode(emailVerificationCode);
+        user.setEmailVerificationCode(new EmailVerificationCode(emailVerificationCodeExpiration));
         return userRepo.save(user);
     }
 
@@ -160,8 +156,7 @@ public class AuthService implements AuthServiceInterface {
         User user = optionalUser.orElseThrow(() -> new BadCredentialsException("Incorrect credentials! Please check your credentials and try again"));
 
         if(user.getStatus().getName().equals(AccountStatus.PENDING_EMAIL_VERIFICATION)) {
-            EmailVerificationCode emailVerificationCode = emailVerificationCodeRepo.save(new EmailVerificationCode(emailVerificationCodeExpiration));
-            user.setEmailVerificationCode(emailVerificationCode);
+            user.setEmailVerificationCode(new EmailVerificationCode(emailVerificationCodeExpiration));
             userRepo.save(user);
             throw new EmailNotVerifiedException("Email not verified! Please verify your email address");
         }
