@@ -133,7 +133,7 @@ public class AuthService implements AuthServiceInterface {
 
         if(passwordEncoder.matches(requestDto.getPassword(), user.getPassword())){
             String token = jwtService.generateToken(user);
-            if(requestDto.getRememberUser()) {
+            if(requestDto.getRememberUser() != null && requestDto.getRememberUser()) {
                 response.addCookie(cookieService.create("access_token", token, Math.toIntExact(cookieExpiration))); // Max age should be in seconds
             } else {
                 response.addCookie(cookieService.create("access_token", token, null)); // Max age should be in seconds
