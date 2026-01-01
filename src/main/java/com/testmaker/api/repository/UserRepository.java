@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
+    Optional<User> findByEmail(String email);
     Optional<User> findByUsername(String username);
 
     @Query("SELECT u FROM User u WHERE u.emailVerificationCode.code = :code")

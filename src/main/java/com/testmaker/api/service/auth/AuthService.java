@@ -46,10 +46,12 @@ public class AuthService implements AuthServiceInterface {
         // Validate the uniqueness of the user's email and username
         Optional<User> optionalUser = userRepo.findByUsername(requestDto.getUsername());
         if(optionalUser.isPresent()) {
-            if(optionalUser.get().getEmail().equals(requestDto.getEmail())) {
-                throw new DuplicateKeyException("A user with this email already exists! Please check your email or use a different one");
-            }
             throw new DuplicateKeyException("A user with this username already exists! Please check your username or use a different one");
+        }
+
+        Optional<User> optionalUser2 = userRepo.findByEmail(requestDto.getEmail());
+        if(optionalUser2.isPresent()) {
+            throw new DuplicateKeyException("A user with this email already exists! Please check your email or use a different one");
         }
 
         Optional<Status> status = statusRepo.findByName(AccountStatus.PENDING_EMAIL_VERIFICATION);
