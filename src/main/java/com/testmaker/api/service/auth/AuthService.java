@@ -3,10 +3,7 @@ package com.testmaker.api.service.auth;
 import com.testmaker.api.dto.auth.*;
 import com.testmaker.api.entity.Status;
 import com.testmaker.api.entity.User;
-import com.testmaker.api.exception.EmailNotVerifiedException;
-import com.testmaker.api.exception.IncorrectVerificationCodeException;
-import com.testmaker.api.exception.PasswordsDoNotMatchException;
-import com.testmaker.api.exception.StatusNotFoundException;
+import com.testmaker.api.exception.*;
 import com.testmaker.api.repository.StatusRepository;
 import com.testmaker.api.repository.UserRepository;
 import com.testmaker.api.service.cookie.CookieServiceInterface;
@@ -68,15 +65,21 @@ public class AuthService implements AuthServiceInterface {
 
     @Override
     public User verifyEmailAddress(VerifyCodeRequest requestDto) {
-        // Find the pending email verification status from the database
-        Optional<Status> optionalPendingStatus = statusRepo.findByName(AccountStatus.PENDING_EMAIL_VERIFICATION);
-        Status pendingStatus = optionalPendingStatus.orElseThrow(() -> new StatusNotFoundException("Couldn't sign up! Please try again later"));
-
-        // Find the user with a valid email verification code
-        Optional<User> optionalUser = userRepo.findByValidEmailVerificationCode(requestDto.getCode(), LocalDateTime.now(), pendingStatus);
+        // Find the user with the provided email verification code
+        Optional<User> optionalUser = userRepo.findByEmailVerificationCode(requestDto.getCode());
         User dbUser = optionalUser.orElseThrow(() -> new IncorrectVerificationCodeException("Incorrect code provided! Please check your code and try again"));
 
-        // Find the active status from the database
+        // Confirm that the code has not expired
+        if(dbUser.getEmailVerificationCodeExpiration().isBefore(LocalDateTime.now())) {
+            throw new ExpiredCodeException("Email verification code expired! Please request for a new one");
+        }
+
+        // Verify the user's status
+        if(dbUser.getStatus().getName().equals(AccountStatus.ACTIVE)) {
+            throw new IncorrectAccountStatusException("Email already verified! Please continue to login to access your account");
+        }
+
+        // Find the active status from the database (Creating a new object will cause consistency issues)
         Optional<Status> optionalActiveStatus = statusRepo.findByName(AccountStatus.ACTIVE);
         Status activeStatus = optionalActiveStatus.orElseThrow(() -> new StatusNotFoundException("Couldn't sign up! Please try again later"));
 
