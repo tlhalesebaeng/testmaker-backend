@@ -146,7 +146,9 @@ public class AuthService implements AuthServiceInterface {
         }
 
         dbUser.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        dbUser.setResetPasswordCode(null);
         User user = userRepo.save(dbUser);
+
         String token = jwtService.generateToken(user);
         response.addCookie(cookieService.create("access_token", token, null));
         return user;
