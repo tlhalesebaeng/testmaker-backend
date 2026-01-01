@@ -42,6 +42,12 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(false, responseDto));
     }
 
+    @PostMapping("/resend/code")
+    public ResponseEntity<AuthResponse> resendCode(@Valid @RequestBody ResendCodeRequest requestDto, @RequestParam String type) {
+        UserResponse responseDto = UserMapper.toResponse(userService.resendCode(requestDto, type));
+        return ResponseEntity.status(HttpStatus.OK).body(new AuthResponse(false, responseDto));
+    }
+
     @PostMapping("/verify/email")
     public ResponseEntity<AuthResponse> verifyEmailAddress(@Valid @RequestBody VerifyCodeRequest requestDto) {
         UserResponse responseDto = UserMapper.toResponse(userService.verifyEmailAddress(requestDto));

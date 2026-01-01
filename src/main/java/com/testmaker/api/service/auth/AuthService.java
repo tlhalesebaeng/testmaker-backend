@@ -151,6 +151,30 @@ public class AuthService implements AuthServiceInterface {
     }
 
     @Override
+    public User resendCode(ResendCodeRequest requestDto, String type) {
+        if(!type.equals("password-reset") && !type.equals("email-verification")) {
+            throw new InvalidCodeTypeException("Invalid code type! Please check the type of the code on your params and try againa");
+        }
+
+        Optional<User> optionalUser = userRepo.findByUsername(requestDto.getUsername());
+        User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found. Please verify your username and try again"));
+
+        if(type.equals("email-verification")) {
+            if(user.getStatus().getName().equals(AccountStatus.ACTIVE)) {
+                throw new IncorrectAccountStatusException("Email already verified! Please login to access your account");
+            }
+
+            user.setEmailVerificationCode(new EmailVerificationCode(emailVerificationCodeExpiration));
+        }
+
+        if(type.equals("password-reset")) {
+            user.setResetPasswordCode(new ResetPasswordCode(emailVerificationCodeExpiration));
+        }
+
+        return userRepo.save(user);
+    }
+
+    @Override
     public User login(LoginRequest requestDto) {
         Optional<User> optionalUser = userRepo.findByUsername(requestDto.getUsername());
         User user = optionalUser.orElseThrow(() -> new BadCredentialsException("Incorrect credentials! Please check your credentials and try again"));

@@ -9,6 +9,7 @@ public interface AuthServiceInterface {
     User forgotPassword(ForgotPasswordRequest requestDto);
     User verifyPasswordResetCode(VerifyCodeRequest requestDto);
     User resetPassword(ResetPasswordRequest requestDto, Integer code);
+    User resendCode(ResendCodeRequest requestDto, String type);
     User checkAuth(String jwt);
     User login(LoginRequest requestDto);
     void logout();
