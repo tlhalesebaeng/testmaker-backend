@@ -1,9 +1,11 @@
 package com.testmaker.api.service.auth;
 
 import com.testmaker.api.dto.auth.*;
+import com.testmaker.api.entity.EmailVerificationCode;
 import com.testmaker.api.entity.Status;
 import com.testmaker.api.entity.User;
 import com.testmaker.api.exception.*;
+import com.testmaker.api.repository.EmailVerificationCodeRepository;
 import com.testmaker.api.repository.StatusRepository;
 import com.testmaker.api.repository.UserRepository;
 import com.testmaker.api.service.cookie.CookieServiceInterface;
@@ -33,6 +35,7 @@ public class AuthService implements AuthServiceInterface {
     private final JwtServiceInterface jwtService;
     private final CookieServiceInterface cookieService;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final EmailVerificationCodeRepository emailVerificationCodeRepo;
 
     @Value("${api.email-verification-code.expiration}")
     private Integer emailVerificationCodeExpiration;
@@ -58,8 +61,8 @@ public class AuthService implements AuthServiceInterface {
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         user.setStatus(status.orElseThrow(() -> new StatusNotFoundException("Couldn't sign up! Please try again later")));
         // TODO: Send the user an email with the 6 digit verification code
-        user.setEmailVerificationCode(Code.generate());
-        user.setEmailVerificationCodeExpiration(LocalDateTime.now().plusMinutes(emailVerificationCodeExpiration));
+        EmailVerificationCode emailVerificationCode = emailVerificationCodeRepo.save(new EmailVerificationCode(emailVerificationCodeExpiration));
+        user.setVerificationCode(emailVerificationCode);
         return userRepo.save(user);
     }
 
