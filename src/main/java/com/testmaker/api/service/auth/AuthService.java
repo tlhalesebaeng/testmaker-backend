@@ -125,9 +125,15 @@ public class AuthService implements AuthServiceInterface {
             throw new PasswordsDoNotMatchException("Passwords do not match! Please confirm your password");
         }
 
-        Optional<User> optionalUser = userRepo.findByValidPasswordResetCode(code, LocalDateTime.now());
+        Optional<User> optionalUser = userRepo.findByPasswordResetCode(code);
         User dbUser = optionalUser.orElseThrow(() -> new IncorrectVerificationCodeException("Incorrect code provided! Please check your code and try again"));
 
+        // Confirm that the code has not expired
+        if(dbUser.getPasswordResetCodeExpiration().isBefore(LocalDateTime.now())) {
+            throw new ExpiredCodeException("Password reset code expired! Please request for a new one");
+        }
+
+        // Verify the user's status
         if(dbUser.getStatus().getName().equals(AccountStatus.PENDING_EMAIL_VERIFICATION)) {
             throw new EmailNotVerifiedException("Email not verified! Please verify your email address");
         }
