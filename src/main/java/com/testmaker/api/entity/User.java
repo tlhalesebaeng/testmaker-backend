@@ -24,6 +24,10 @@ public class User {
     @JoinColumn(name = "code_id")
     private EmailVerificationCode emailVerificationCode;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "password_reset_code_id")
+    private ResetPasswordCode resetPasswordCode;
+
     @Column(unique = true)
     private String username;
 
