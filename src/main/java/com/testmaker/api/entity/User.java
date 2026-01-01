@@ -20,6 +20,10 @@ public class User {
     @JoinColumn(name = "status_id")
     private Status status;
 
+    @OneToOne
+    @JoinColumn(name = "code_id", referencedColumnName = "id")
+    private EmailVerificationCode verificationCode;
+
     @Column(unique = true)
     private String username;
 
