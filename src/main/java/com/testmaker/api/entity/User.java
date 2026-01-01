@@ -21,7 +21,7 @@ public class User {
     private Status status;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "code_id")
+    @JoinColumn(name = "email_verification_code_id")
     private EmailVerificationCode emailVerificationCode;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
