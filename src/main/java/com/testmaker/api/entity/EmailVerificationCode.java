@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @Entity
@@ -16,5 +18,5 @@ public class EmailVerificationCode {
     private User user;
     
     private Integer code;
-    private Integer expiration;
+    private LocalDateTime expiration;
 }
