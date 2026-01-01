@@ -1,5 +1,6 @@
 package com.testmaker.api.entity;
 
+import com.testmaker.api.utils.Code;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,9 +17,14 @@ public class ResetPasswordCode {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne(mappedBy = "resetPasswordCode")
+    private User user;
+
     private Integer code;
     private LocalDateTime expiration;
 
-    @OneToOne(mappedBy = "resetPasswordCode")
-    private User user;
+    public ResetPasswordCode(Integer expiration) {
+        code = Code.generate();
+        this.expiration = LocalDateTime.now().plusMinutes(expiration);
+    }
 }
