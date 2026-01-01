@@ -35,6 +35,4 @@ public class User {
     private String email;
 
     private String password;
-    private Integer passwordResetCode;
-    private LocalDateTime passwordResetCodeExpiration;
 }
