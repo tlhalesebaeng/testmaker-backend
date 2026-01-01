@@ -1,6 +1,8 @@
 package com.testmaker.api.exception;
 
 import com.testmaker.api.dto.exception.ExceptionResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
@@ -10,14 +12,19 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
 @ControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
+    private final HttpServletRequest request;
+
     @ExceptionHandler({
             IncorrectVerificationCodeException.class,
             EmailNotVerifiedException.class,
@@ -27,6 +34,12 @@ public class GlobalExceptionHandler {
     })
     public ResponseEntity<ExceptionResponse> handleCustomExceptions(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler({ HttpRequestMethodNotSupportedException.class, NoResourceFoundException.class })
+    public ResponseEntity<ExceptionResponse> handleNotFoundExceptions() {
+        String message = request.getMethod() + " " + request.getRequestURI() + " not found";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(message));
     }
 
     @ExceptionHandler({ HttpMessageNotReadableException.class })
