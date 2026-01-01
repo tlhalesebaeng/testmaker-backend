@@ -62,7 +62,7 @@ public class AuthService implements AuthServiceInterface {
         user.setStatus(status.orElseThrow(() -> new StatusNotFoundException("Couldn't sign up! Please try again later")));
         // TODO: Send the user an email with the 6 digit verification code
         EmailVerificationCode emailVerificationCode = emailVerificationCodeRepo.save(new EmailVerificationCode(emailVerificationCodeExpiration));
-        user.setVerificationCode(emailVerificationCode);
+        user.setEmailVerificationCode(emailVerificationCode);
         return userRepo.save(user);
     }
 
@@ -73,7 +73,8 @@ public class AuthService implements AuthServiceInterface {
         User dbUser = optionalUser.orElseThrow(() -> new IncorrectVerificationCodeException("Incorrect code provided! Please check your code and try again"));
 
         // Confirm that the code has not expired
-        if(dbUser.getEmailVerificationCodeExpiration().isBefore(LocalDateTime.now())) {
+        EmailVerificationCode userEmailVerificationCode = dbUser.getEmailVerificationCode();
+        if(userEmailVerificationCode.getExpiration().isBefore(LocalDateTime.now())) {
             throw new ExpiredCodeException("Email verification code expired! Please request for a new one");
         }
 
@@ -154,8 +155,8 @@ public class AuthService implements AuthServiceInterface {
         User user = optionalUser.orElseThrow(() -> new BadCredentialsException("Incorrect credentials! Please check your credentials and try again"));
 
         if(user.getStatus().getName().equals(AccountStatus.PENDING_EMAIL_VERIFICATION)) {
-            user.setEmailVerificationCode(Code.generate());
-            user.setEmailVerificationCodeExpiration(LocalDateTime.now().plusMinutes(emailVerificationCodeExpiration));
+            EmailVerificationCode emailVerificationCode = emailVerificationCodeRepo.save(new EmailVerificationCode(emailVerificationCodeExpiration));
+            user.setEmailVerificationCode(emailVerificationCode);
             userRepo.save(user);
             throw new EmailNotVerifiedException("Email not verified! Please verify your email address");
         }
