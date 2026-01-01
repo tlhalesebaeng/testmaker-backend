@@ -8,4 +8,7 @@ import lombok.Setter;
 @Setter
 @Entity
 public class EmailVerificationCode {
+    private Long id;
+    private Integer code;
+    private Integer expiration;
 }
