@@ -36,9 +36,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(e.getMessage()));
     }
 
-    @ExceptionHandler({ HttpRequestMethodNotSupportedException.class, NoResourceFoundException.class })
+    @ExceptionHandler({ NoResourceFoundException.class })
     public ResponseEntity<ExceptionResponse> handleNotFoundExceptions() {
         String message = request.getMethod() + " " + request.getRequestURI() + " not found";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(message));
+    }
+
+    @ExceptionHandler({ HttpRequestMethodNotSupportedException.class })
+    public ResponseEntity<ExceptionResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        String message =  e.getMethod() + " http method not found for " + request.getRequestURI();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(message));
     }
 
