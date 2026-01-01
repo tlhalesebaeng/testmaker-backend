@@ -21,7 +21,7 @@ public class User {
     private Status status;
 
     @OneToOne
-    @JoinColumn(name = "code_id", referencedColumnName = "id")
+    @JoinColumn(name = "code_id")
     private EmailVerificationCode verificationCode;
 
     @Column(unique = true)
