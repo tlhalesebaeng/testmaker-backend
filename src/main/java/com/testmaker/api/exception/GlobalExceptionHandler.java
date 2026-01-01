@@ -53,7 +53,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler({ Exception.class })
-    public ResponseEntity<ExceptionResponse> handleUncaughtExceptions() {
+    public ResponseEntity<ExceptionResponse> handleUncaughtExceptions(Exception e) {
+        System.out.println(e);
         String message = "Something went very wrong! Please try again later";
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ExceptionResponse(message));
     }
