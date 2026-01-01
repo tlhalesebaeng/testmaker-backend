@@ -12,6 +12,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -52,6 +53,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException() {
         String message = "Request body is not readable! Please check your body and try again";
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(message));
+    }
+
+    @ExceptionHandler({ HttpMediaTypeNotSupportedException.class })
+    public ResponseEntity<ExceptionResponse> handleHttpMediaTypeNotSupportedException(HttpMediaTypeNotSupportedException e) {
+        return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE).body(new ExceptionResponse(e.getMessage()));
     }
 
     @ExceptionHandler({ MethodArgumentNotValidException.class })
