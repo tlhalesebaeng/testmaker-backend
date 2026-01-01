@@ -89,6 +89,7 @@ public class AuthService implements AuthServiceInterface {
 
         // Change the user status to active
         dbUser.setStatus(activeStatus);
+        dbUser.setEmailVerificationCode(null);
         User user = userRepo.save(dbUser);
 
         String token = jwtService.generateToken(user);
