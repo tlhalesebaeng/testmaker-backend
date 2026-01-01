@@ -103,8 +103,15 @@ public class AuthService implements AuthServiceInterface {
 
     @Override
     public User verifyPasswordResetCode(VerifyCodeRequest requestDto) {
-        Optional<User> optionalUser = userRepo.findByValidPasswordResetCode(requestDto.getCode(), LocalDateTime.now());
-        return optionalUser.orElseThrow(() -> new IncorrectVerificationCodeException("Incorrect code provided! Please check your code and try again"));
+        Optional<User> optionalUser = userRepo.findByPasswordResetCode(requestDto.getCode());
+        User user = optionalUser.orElseThrow(() -> new IncorrectVerificationCodeException("Incorrect code provided! Please check your code and try again"));
+
+        // Confirm that the code has not expired
+        if(user.getPasswordResetCodeExpiration().isBefore(LocalDateTime.now())) {
+            throw new ExpiredCodeException("Password reset code expired! Please request for a new one");
+        }
+
+        return user;
     }
 
     @Override
