@@ -117,6 +117,11 @@ public class AuthService implements AuthServiceInterface {
 
         Optional<User> optionalUser = userRepo.findByValidPasswordResetCode(code, LocalDateTime.now());
         User dbUser = optionalUser.orElseThrow(() -> new IncorrectVerificationCodeException("Incorrect code provided! Please check your code and try again"));
+
+        if(dbUser.getStatus().getName().equals(AccountStatus.PENDING_EMAIL_VERIFICATION)) {
+            throw new EmailNotVerifiedException("Email not verified! Please verify your email address");
+        }
+
         dbUser.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         User user = userRepo.save(dbUser);
         String token = jwtService.generateToken(user);
