@@ -106,6 +106,11 @@ public class AuthService implements AuthServiceInterface {
 
     @Override
     public User resetPassword(ResetPasswordRequest requestDto, Integer code) {
+        // Code cannot be null at this point because the request parameter validators have already validated it
+        if(code < 100000 || code > 999999) {
+            throw new IncorrectVerificationCodeException("Invalid code provided! Please provide a 6 digit code");
+        }
+
         if(!requestDto.getPassword().equals(requestDto.getConfirmPassword())) {
             throw new PasswordsDoNotMatchException("Passwords do not match! Please confirm your password");
         }
