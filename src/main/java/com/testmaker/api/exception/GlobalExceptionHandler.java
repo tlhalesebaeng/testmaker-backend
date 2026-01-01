@@ -21,7 +21,8 @@ public class GlobalExceptionHandler {
             InvalidVerificationCodeException.class,
             EmailNotVerifiedException.class,
             PasswordsDoNotMatchException.class,
-            StatusNotFoundException.class
+            StatusNotFoundException.class,
+            IncorrectAccountStatusException.class
     })
     public ResponseEntity<ExceptionResponse> handleCustomExceptions(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(e.getMessage()));
