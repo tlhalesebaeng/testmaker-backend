@@ -17,7 +17,7 @@ public class EmailVerificationCode {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(mappedBy = "verificationCode")
+    @OneToOne(mappedBy = "emailVerificationCode")
     private User user;
     
     private Integer code;
