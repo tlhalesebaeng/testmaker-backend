@@ -19,7 +19,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 @ControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler({
-            InvalidVerificationCodeException.class,
+            IncorrectVerificationCodeException.class,
             EmailNotVerifiedException.class,
             PasswordsDoNotMatchException.class,
             StatusNotFoundException.class,

@@ -4,7 +4,7 @@ import com.testmaker.api.dto.auth.*;
 import com.testmaker.api.entity.Status;
 import com.testmaker.api.entity.User;
 import com.testmaker.api.exception.EmailNotVerifiedException;
-import com.testmaker.api.exception.InvalidVerificationCodeException;
+import com.testmaker.api.exception.IncorrectVerificationCodeException;
 import com.testmaker.api.exception.PasswordsDoNotMatchException;
 import com.testmaker.api.exception.StatusNotFoundException;
 import com.testmaker.api.repository.StatusRepository;
@@ -74,7 +74,7 @@ public class AuthService implements AuthServiceInterface {
 
         // Find the user with a valid email verification code
         Optional<User> optionalUser = userRepo.findByValidEmailVerificationCode(requestDto.getCode(), LocalDateTime.now(), pendingStatus);
-        User dbUser = optionalUser.orElseThrow(() -> new InvalidVerificationCodeException("Invalid code provided! Please check your code and try again"));
+        User dbUser = optionalUser.orElseThrow(() -> new IncorrectVerificationCodeException("Incorrect code provided! Please check your code and try again"));
 
         // Find the active status from the database
         Optional<Status> optionalActiveStatus = statusRepo.findByName(AccountStatus.ACTIVE);
@@ -101,7 +101,7 @@ public class AuthService implements AuthServiceInterface {
     @Override
     public User verifyPasswordResetCode(VerifyCodeRequest requestDto) {
         Optional<User> optionalUser = userRepo.findByValidPasswordResetCode(requestDto.getCode(), LocalDateTime.now());
-        return optionalUser.orElseThrow(() -> new InvalidVerificationCodeException("Invalid code provided! Please check your code and try again"));
+        return optionalUser.orElseThrow(() -> new IncorrectVerificationCodeException("Incorrect code provided! Please check your code and try again"));
     }
 
     @Override
@@ -111,7 +111,7 @@ public class AuthService implements AuthServiceInterface {
         }
 
         Optional<User> optionalUser = userRepo.findByValidPasswordResetCode(code, LocalDateTime.now());
-        User dbUser = optionalUser.orElseThrow(() -> new InvalidVerificationCodeException("Invalid code provided! Please check your code and try again"));
+        User dbUser = optionalUser.orElseThrow(() -> new IncorrectVerificationCodeException("Incorrect code provided! Please check your code and try again"));
         dbUser.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         User user = userRepo.save(dbUser);
         String token = jwtService.generateToken(user);
