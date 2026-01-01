@@ -1,5 +1,6 @@
 package com.testmaker.api.entity;
 
+import com.testmaker.api.utils.Code;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,4 +22,9 @@ public class EmailVerificationCode {
     
     private Integer code;
     private LocalDateTime expiration;
+
+    public EmailVerificationCode(Integer expiration) {
+        code = Code.generate();
+        this.expiration = LocalDateTime.now().plusMinutes(expiration);
+    }
 }
