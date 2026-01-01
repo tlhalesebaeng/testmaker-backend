@@ -22,7 +22,7 @@ public class User {
 
     @OneToOne
     @JoinColumn(name = "code_id")
-    private EmailVerificationCode verificationCode;
+    private EmailVerificationCode emailVerificationCode;
 
     @Column(unique = true)
     private String username;
@@ -32,7 +32,5 @@ public class User {
 
     private String password;
     private Integer passwordResetCode;
-    private Integer emailVerificationCode;
     private LocalDateTime passwordResetCodeExpiration;
-    private LocalDateTime emailVerificationCodeExpiration;
 }
