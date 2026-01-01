@@ -45,7 +45,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ HttpRequestMethodNotSupportedException.class })
     public ResponseEntity<ExceptionResponse> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
         String message =  e.getMethod() + " http method not found for " + request.getRequestURI();
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(message));
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(new ExceptionResponse(message));
     }
 
     @ExceptionHandler({ HttpMessageNotReadableException.class })
