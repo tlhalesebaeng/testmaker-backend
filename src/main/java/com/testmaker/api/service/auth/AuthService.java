@@ -124,7 +124,7 @@ public class AuthService implements AuthServiceInterface {
         Optional<User> optionalUser = userRepo.findByUsername(requestDto.getUsername());
         User user = optionalUser.orElseThrow(() -> new BadCredentialsException("Incorrect credentials! Please check your credentials and try again"));
 
-        if(user.getStatus().equals(AccountStatus.PENDING_EMAIL_VERIFICATION)) {
+        if(user.getStatus().getName().equals(AccountStatus.PENDING_EMAIL_VERIFICATION)) {
             user.setEmailVerificationCode(Code.generate());
             user.setEmailVerificationCodeExpiration(LocalDateTime.now().plusMinutes(emailVerificationCodeExpiration));
             userRepo.save(user);
