@@ -11,5 +11,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT u FROM User u WHERE u.emailVerificationCode.code = :code")
     Optional<User> findByEmailVerificationCode(Integer code);
+
+    @Query("SELECT u FROM User u WHERE u.resetPasswordCode.code = :code")
     Optional<User> findByPasswordResetCode(Integer code);
 }

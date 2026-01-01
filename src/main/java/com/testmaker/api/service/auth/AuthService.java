@@ -2,6 +2,7 @@ package com.testmaker.api.service.auth;
 
 import com.testmaker.api.dto.auth.*;
 import com.testmaker.api.entity.EmailVerificationCode;
+import com.testmaker.api.entity.ResetPasswordCode;
 import com.testmaker.api.entity.Status;
 import com.testmaker.api.entity.User;
 import com.testmaker.api.exception.*;
@@ -101,8 +102,7 @@ public class AuthService implements AuthServiceInterface {
     public User forgotPassword(ForgotPasswordRequest requestDto) {
         Optional<User> optionalUser = userRepo.findByUsername(requestDto.getUsername());
         User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found. Please verify your username and try again"));
-        user.setPasswordResetCode(Code.generate());
-        user.setPasswordResetCodeExpiration(LocalDateTime.now().plusMinutes(emailVerificationCodeExpiration));
+        user.setResetPasswordCode(new ResetPasswordCode(emailVerificationCodeExpiration));
         return userRepo.save(user);
     }
 
@@ -112,7 +112,8 @@ public class AuthService implements AuthServiceInterface {
         User user = optionalUser.orElseThrow(() -> new IncorrectVerificationCodeException("Incorrect code provided! Please check your code and try again"));
 
         // Confirm that the code has not expired
-        if(user.getPasswordResetCodeExpiration().isBefore(LocalDateTime.now())) {
+        ResetPasswordCode userResetPasswordCode = user.getResetPasswordCode();
+        if(userResetPasswordCode.getExpiration().isBefore(LocalDateTime.now())) {
             throw new ExpiredCodeException("Password reset code expired! Please request for a new one");
         }
 
@@ -134,7 +135,8 @@ public class AuthService implements AuthServiceInterface {
         User dbUser = optionalUser.orElseThrow(() -> new IncorrectVerificationCodeException("Incorrect code provided! Please check your code and try again"));
 
         // Confirm that the code has not expired
-        if(dbUser.getPasswordResetCodeExpiration().isBefore(LocalDateTime.now())) {
+        ResetPasswordCode userResetPasswordCode = dbUser.getResetPasswordCode();
+        if(userResetPasswordCode.getExpiration().isBefore(LocalDateTime.now())) {
             throw new ExpiredCodeException("Password reset code expired! Please request for a new one");
         }
 
