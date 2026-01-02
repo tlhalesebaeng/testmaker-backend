@@ -155,7 +155,7 @@ public class AuthService implements AuthServiceInterface {
     @Override
     public User resendCode(ResendCodeRequest requestDto, String type) {
         if(!type.equals("password-reset") && !type.equals("email-verification")) {
-            throw new InvalidCodeTypeException("Invalid code type! Please check the type of the code on your params and try againa");
+            throw new InvalidCodeTypeException("Invalid code type! Please check the type of the code on your params and try again");
         }
 
         Optional<User> optionalUser = userRepo.findByUsername(requestDto.getUsername());
