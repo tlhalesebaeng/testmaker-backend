@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
     private final HttpServletRequest request;
 
     @ExceptionHandler({
-            IncorrectVerificationCodeException.class,
+            IncorrectCodeException.class,
             EmailNotVerifiedException.class,
             PasswordsDoNotMatchException.class,
             StatusNotFoundException.class,

@@ -69,7 +69,7 @@ public class AuthService implements AuthServiceInterface {
     public User verifyEmailAddress(VerifyCodeRequest requestDto) {
         // Find the user with the provided email verification code
         Optional<User> optionalUser = userRepo.findByEmailVerificationCode(requestDto.getCode());
-        User dbUser = optionalUser.orElseThrow(() -> new IncorrectVerificationCodeException("Incorrect code provided! Please check your code and try again"));
+        User dbUser = optionalUser.orElseThrow(() -> new IncorrectCodeException("Incorrect code provided! Please check your code and try again"));
 
         // Confirm that the code has not expired
         EmailVerificationCode userEmailVerificationCode = dbUser.getEmailVerificationCode();
@@ -107,7 +107,7 @@ public class AuthService implements AuthServiceInterface {
     @Override
     public User verifyPasswordResetCode(VerifyCodeRequest requestDto) {
         Optional<User> optionalUser = userRepo.findByPasswordResetCode(requestDto.getCode());
-        User user = optionalUser.orElseThrow(() -> new IncorrectVerificationCodeException("Incorrect code provided! Please check your code and try again"));
+        User user = optionalUser.orElseThrow(() -> new IncorrectCodeException("Incorrect code provided! Please check your code and try again"));
 
         // Confirm that the code has not expired
         ResetPasswordCode userResetPasswordCode = user.getResetPasswordCode();
@@ -122,7 +122,7 @@ public class AuthService implements AuthServiceInterface {
     public User resetPassword(ResetPasswordRequest requestDto, Integer code) {
         // Code cannot be null at this point because the request parameter validators have already validated it
         if(code < 100000 || code > 999999) {
-            throw new IncorrectVerificationCodeException("Invalid code provided! Please provide a 6 digit code");
+            throw new IncorrectCodeException("Invalid code provided! Please provide a 6 digit code");
         }
 
         if(!requestDto.getPassword().equals(requestDto.getConfirmPassword())) {
@@ -130,7 +130,7 @@ public class AuthService implements AuthServiceInterface {
         }
 
         Optional<User> optionalUser = userRepo.findByPasswordResetCode(code);
-        User dbUser = optionalUser.orElseThrow(() -> new IncorrectVerificationCodeException("Incorrect code provided! Please check your code and try again"));
+        User dbUser = optionalUser.orElseThrow(() -> new IncorrectCodeException("Incorrect code provided! Please check your code and try again"));
 
         // Confirm that the code has not expired
         ResetPasswordCode userResetPasswordCode = dbUser.getResetPasswordCode();
