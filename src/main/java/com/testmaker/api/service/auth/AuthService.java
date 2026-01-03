@@ -72,8 +72,7 @@ public class AuthService implements AuthServiceInterface {
         User dbUser = optionalUser.orElseThrow(() -> new IncorrectCodeException("Incorrect code provided! Please check your code and try again"));
 
         // Confirm that the code has not expired
-        EmailVerificationCode userEmailVerificationCode = dbUser.getEmailVerificationCode();
-        if(userEmailVerificationCode.getExpiration().isBefore(LocalDateTime.now())) {
+        if(dbUser.getEmailVerificationCode().isExpired()) {
             throw new ExpiredCodeException("Email verification code expired! Please request for a new one");
         }
 
@@ -110,8 +109,7 @@ public class AuthService implements AuthServiceInterface {
         User user = optionalUser.orElseThrow(() -> new IncorrectCodeException("Incorrect code provided! Please check your code and try again"));
 
         // Confirm that the code has not expired
-        ResetPasswordCode userResetPasswordCode = user.getResetPasswordCode();
-        if(userResetPasswordCode.getExpiration().isBefore(LocalDateTime.now())) {
+        if(user.getResetPasswordCode().isExpired()) {
             throw new ExpiredCodeException("Password reset code expired! Please request for a new one");
         }
 
@@ -133,8 +131,7 @@ public class AuthService implements AuthServiceInterface {
         User dbUser = optionalUser.orElseThrow(() -> new IncorrectCodeException("Incorrect code provided! Please check your code and try again"));
 
         // Confirm that the code has not expired
-        ResetPasswordCode userResetPasswordCode = dbUser.getResetPasswordCode();
-        if(userResetPasswordCode.getExpiration().isBefore(LocalDateTime.now())) {
+        if(dbUser.getResetPasswordCode().isExpired()) {
             throw new ExpiredCodeException("Password reset code expired! Please request for a new one");
         }
 

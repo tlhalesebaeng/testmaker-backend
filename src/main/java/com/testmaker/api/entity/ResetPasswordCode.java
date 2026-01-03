@@ -27,4 +27,8 @@ public class ResetPasswordCode {
         code = Code.generate();
         this.expiration = LocalDateTime.now().plusMinutes(expiration);
     }
+
+    public boolean isExpired() {
+        return expiration.isBefore(LocalDateTime.now());
+    }
 }
