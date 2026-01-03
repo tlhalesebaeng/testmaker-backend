@@ -159,7 +159,7 @@ public class AuthService implements AuthServiceInterface {
         User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found. Please verify your username and try again"));
 
         if(type.equals("email-verification")) {
-            if(user.getStatus().getName().equals(AccountStatus.ACTIVE)) {
+            if(!user.getStatus().getName().equals(AccountStatus.PENDING_EMAIL_VERIFICATION)) {
                 throw new IncorrectAccountStatusException("Email already verified! Please login to access your account");
             }
 
