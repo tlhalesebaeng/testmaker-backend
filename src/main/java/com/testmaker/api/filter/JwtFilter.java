@@ -29,7 +29,7 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         try {
             // Do not perform this filter for routes that are not protected
-            if(!routeService.isProtected(request.getMethod(), request.getRequestURI())) {
+            if(!routeService.isProtected(request.getRequestURI(), request.getMethod())) {
                 filterChain.doFilter(request, response);
                 return;
             }

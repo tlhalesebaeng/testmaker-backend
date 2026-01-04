@@ -26,7 +26,7 @@ public class RequestsLoggerFilter extends OncePerRequestFilter {
         String uri = request.getRequestURI();
         String queryString = request.getQueryString();
         String query = queryString != null ? "?" + queryString : "";
-        boolean isProtected = routeService.isProtected(method, uri);
+        boolean isProtected = routeService.isProtected(uri, method);
         String correlationId = UUID.randomUUID().toString();
         String routeIsProtected = isProtected ? "Protected" : "Not Protected";
 
