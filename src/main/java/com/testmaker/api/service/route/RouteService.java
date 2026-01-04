@@ -1,15 +1,22 @@
 package com.testmaker.api.service.route;
 
 import com.testmaker.api.utils.Route;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class RouteService implements RouteServiceInterface{
+
+    @Value("${api.prefix}")
+    private String prefix;
+
     @Override
     public List<Route> getProtected() {
-        return List.of();
+        return List.of(
+                new Route(prefix + "/test", "POST")
+        );
     }
 
     @Override
