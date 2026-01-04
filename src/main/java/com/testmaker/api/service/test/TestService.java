@@ -62,12 +62,9 @@ public class TestService implements TestServiceInterface {
 
             // Throw an exception when the user provides a type that is not supported
             switch (questionRequest.getType()) {
-                case "true-or-false":
-                    question.setType(QuestionType.TRUE_OR_FALSE);
-                case "multiple-choice":
-                    question.setType(QuestionType.MULTIPLE_CHOICE);
-                case "fill-the-sentence":
-                    question.setType(QuestionType.FILL_THE_SENTENCE);
+                case "true-or-false" -> question.setType(QuestionType.TRUE_OR_FALSE);
+                case "multiple-choice" -> question.setType(QuestionType.MULTIPLE_CHOICE);
+                case "fill-the-sentence" -> question.setType(QuestionType.FILL_THE_SENTENCE);
             }
 
             question.setTest(test);
