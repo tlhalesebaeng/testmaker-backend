@@ -5,19 +5,24 @@ import com.testmaker.api.service.jwt.JwtServiceInterface;
 import com.testmaker.api.service.route.RouteServiceInterface;
 import com.testmaker.api.service.user.PrincipalUserDetails;
 import com.testmaker.api.service.user.UserServiceInterface;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
@@ -25,9 +30,9 @@ import java.io.IOException;
 @AllArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
     private final JwtServiceInterface jwtService;
-    private final RouteServiceInterface routeService;
-    private final UserDetailsService userDetailsService;
     private final UserServiceInterface userService;
+    private final RouteServiceInterface routeService;
+    private final @Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -60,8 +65,10 @@ public class JwtFilter extends OncePerRequestFilter {
             }
 
             filterChain.doFilter(request, response);
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
+        } catch (ExpiredJwtException | MalformedJwtException | IllegalArgumentException | UnsupportedJwtException |
+                 UsernameNotFoundException | IOException | ServletException  exception)
+        {
+            resolver.resolveException(request, response, null, exception);
         }
     }
 }
