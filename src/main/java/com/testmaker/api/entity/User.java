@@ -40,4 +40,10 @@ public class User {
 
     private String password;
     private LocalDateTime passwordChangedAt;
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    private void beforePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

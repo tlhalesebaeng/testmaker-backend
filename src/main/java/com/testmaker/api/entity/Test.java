@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Getter
@@ -28,4 +29,10 @@ public class Test {
 
     @Column(nullable = false)
     private String title;
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    private void beforePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }
