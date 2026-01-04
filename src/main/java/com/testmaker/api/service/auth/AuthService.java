@@ -10,7 +10,6 @@ import com.testmaker.api.repository.StatusRepository;
 import com.testmaker.api.repository.UserRepository;
 import com.testmaker.api.service.cookie.CookieServiceInterface;
 import com.testmaker.api.service.jwt.JwtServiceInterface;
-import com.testmaker.api.service.user.PrincipalUserDetails;
 import com.testmaker.api.utils.AccountStatus;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletResponse;
@@ -59,6 +58,7 @@ public class AuthService implements AuthServiceInterface {
         user.setEmail(requestDto.getEmail());
         user.setUsername(requestDto.getUsername());
         user.setPassword(passwordEncoder.encode(requestDto.getPassword()));
+        user.setPasswordChangedAt(LocalDateTime.now());
         user.setStatus(status.orElseThrow(() -> new StatusNotFoundException("Couldn't sign up! Please try again later")));
         // TODO: Send the user an email with the 6 digit verification code
         user.setEmailVerificationCode(new EmailVerificationCode(emailVerificationCodeExpiration));
@@ -142,6 +142,7 @@ public class AuthService implements AuthServiceInterface {
 
         dbUser.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         dbUser.setResetPasswordCode(null);
+        dbUser.setPasswordChangedAt(LocalDateTime.now());
         User user = userRepo.save(dbUser);
 
         String token = jwtService.generateToken(user);
@@ -203,7 +204,7 @@ public class AuthService implements AuthServiceInterface {
             Claims claims = jwtService.getAllClaims(jwt);
             Optional<User> optionalUser = userRepo.findByUsername(claims.getSubject());
             User user = optionalUser.orElseThrow(() -> new RuntimeException(""));
-            if(jwtService.validateToken(jwt, new PrincipalUserDetails(user))) return user;
+            if(jwtService.validateToken(jwt, user)) return user;
             return null;
         } catch (Exception e) {
             // All exceptions thrown are caught here because the most important thing is to determine if the user is authenticated or not

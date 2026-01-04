@@ -1,7 +1,10 @@
 package com.testmaker.api.filter;
 
+import com.testmaker.api.entity.User;
 import com.testmaker.api.service.jwt.JwtServiceInterface;
 import com.testmaker.api.service.route.RouteServiceInterface;
+import com.testmaker.api.service.user.PrincipalUserDetails;
+import com.testmaker.api.service.user.UserServiceInterface;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
@@ -24,6 +27,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtServiceInterface jwtService;
     private final RouteServiceInterface routeService;
     private final UserDetailsService userDetailsService;
+    private final UserServiceInterface userService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -45,9 +49,10 @@ public class JwtFilter extends OncePerRequestFilter {
             if(token != null) username = jwtService.getAllClaims(token).getSubject();
 
             if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+                User user = userService.getByUsername(username);
+                UserDetails userDetails = new PrincipalUserDetails(user);
 
-                if(jwtService.validateToken(token, userDetails)) {
+                if(jwtService.validateToken(token, user)) {
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(authToken);

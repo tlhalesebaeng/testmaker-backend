@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Service
@@ -49,9 +51,13 @@ public class JwtService implements JwtServiceInterface{
     }
 
     @Override
-    public boolean validateToken(String token, UserDetails userDetails) {
+    public boolean validateToken(String token, User user) {
         Claims claims = this.getAllClaims(token);
-        boolean usernamesMatch = userDetails.getUsername().equals(claims.getSubject());
+
+        LocalDateTime issuedAt = LocalDateTime.ofInstant(claims.getIssuedAt().toInstant(), ZoneId.systemDefault());
+        if(user.getPasswordChangedAt().isAfter(issuedAt)) return false;
+
+        boolean usernamesMatch = user.getUsername().equals(claims.getSubject());
         boolean tokenExpired = claims.getExpiration().before(new Date());
         return usernamesMatch && !tokenExpired;
     }

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 @Getter
@@ -38,4 +39,5 @@ public class User {
     private String email;
 
     private String password;
+    private LocalDateTime passwordChangedAt;
 }
