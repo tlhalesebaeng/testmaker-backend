@@ -140,6 +140,11 @@ public class AuthService implements AuthServiceInterface {
             throw new EmailNotVerifiedException("Email not verified! Please verify your email address");
         }
 
+        // Check that the old and new passwords are not similar
+        if(passwordEncoder.matches(requestDto.getPassword(), dbUser.getPassword())) {
+            throw new InvalidPasswordException("Old password cannot be used! Please provide a new password");
+        }
+
         dbUser.setPassword(passwordEncoder.encode(requestDto.getPassword()));
         dbUser.setResetPasswordCode(null);
         dbUser.setPasswordChangedAt(LocalDateTime.now());
