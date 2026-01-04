@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
@@ -73,6 +74,11 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ExceptionResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException e) {
         String message = "Missing request parameter '" + e.getParameterName() + "'! Please check your parameters and try again";
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(message));
+    }
+
+    @ExceptionHandler({ InsufficientAuthenticationException.class })
+    public ResponseEntity<ExceptionResponse> handleAuthenticationException(){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionResponse("You are not logged in! Please login to continue"));
     }
 
     @ExceptionHandler({ UsernameNotFoundException.class, BadCredentialsException.class })
