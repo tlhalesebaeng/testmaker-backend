@@ -3,6 +3,8 @@ package com.testmaker.api.service.user;
 import com.testmaker.api.entity.User;
 import com.testmaker.api.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,5 +22,10 @@ public class PrincipalUserDetailsService implements UserDetailsService {
         Optional<User> optionalUser = userRepo.findByUsername(username);
         User user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found. Please verify your username and try again"));
         return new PrincipalUserDetails(user);
+    }
+
+    public UserDetails getPrincipal() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return (UserDetails) auth.getPrincipal();
     }
 }
