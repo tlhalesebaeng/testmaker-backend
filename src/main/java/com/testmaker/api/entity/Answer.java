@@ -18,6 +18,8 @@ public class Answer {
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
+    @Column(nullable = false)
     private String answer;
+
     private Boolean isCorrect;
 }

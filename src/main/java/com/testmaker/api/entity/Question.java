@@ -24,8 +24,10 @@ public class Question {
     @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Answer> answers;
 
+    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private QuestionType type;
 
+    @Column(nullable = false)
     private String question;
 }

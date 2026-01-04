@@ -17,12 +17,15 @@ public class Test {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "creator")
+    @JoinColumn(name = "creator", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "test", cascade = CascadeType.ALL, orphanRemoval = true)
     private Collection<Question> questions;
 
+    @Column(nullable = false)
     private Integer duration;
+
+    @Column(nullable = false)
     private String title;
 }
