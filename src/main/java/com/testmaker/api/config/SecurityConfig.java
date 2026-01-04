@@ -23,6 +23,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 @RequiredArgsConstructor
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
+    private final AuthEntryPoint authEntryPoint;
     private final RequestsLoggerFilter loggerFilter;
     private final RouteServiceInterface routeService;
     private final UserDetailsService userDetailsService;
@@ -38,6 +39,7 @@ public class SecurityConfig {
         http.authenticationProvider(new DaoAuthenticationProvider(userDetailsService));
         http.addFilterBefore(loggerFilter, WebAsyncManagerIntegrationFilter.class);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        http.exceptionHandling(customizer -> customizer.authenticationEntryPoint(authEntryPoint));
         http.authorizeHttpRequests(customizer -> {
             routeService.getProtected().forEach(
                     route -> customizer.requestMatchers(route.getMethod(), route.getURI()).authenticated()
