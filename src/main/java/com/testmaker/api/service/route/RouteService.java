@@ -15,7 +15,8 @@ public class RouteService implements RouteServiceInterface{
     @Override
     public List<Route> getProtected() {
         return List.of(
-                new Route(prefix + "/test", "POST")
+                new Route(prefix + "/test", "POST"),
+                new Route(prefix + "/test/save-progress", "POST")
         );
     }
 
