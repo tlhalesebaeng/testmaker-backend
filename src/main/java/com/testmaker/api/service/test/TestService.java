@@ -266,4 +266,10 @@ public class TestService implements TestServiceInterface {
         User user = userService.getByUsername(principalUserService.getPrincipal().getUsername());
         return testRepo.getAllByUser(user);
     }
+
+    @Override
+    public Test getTestById(Long id) {
+        Optional<Test> optionalTest = testRepo.findById(id);
+        return optionalTest.orElseThrow(() -> new ResourceNotFoundException("Test not found! Please check your test id and try again"));
+    }
 }

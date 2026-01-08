@@ -11,4 +11,5 @@ public interface TestServiceInterface {
     Test saveNewTestProgress(SaveTestRequest requestDto);
     Test saveExistingTestProgress(SaveTestRequest requestDto, Long id);
     Collection<Test> getAllMyTests();
+    Test getTestById(Long id);
 }

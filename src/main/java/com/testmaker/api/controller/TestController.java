@@ -28,6 +28,12 @@ public class TestController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<TestResponse> getTest(@PathVariable Long id) {
+        TestResponse response = TestMapper.toResponse(testService.getTestById(id));
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
     // 'My' refers to the principal user i.e. The currently authenticated user
     @GetMapping("/mine")
     public ResponseEntity<Collection<TestResponse>> getAllMyTests() {
