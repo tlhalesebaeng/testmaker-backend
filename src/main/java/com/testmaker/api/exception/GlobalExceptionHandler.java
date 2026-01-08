@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
+import java.nio.file.AccessDeniedException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 @ControllerAdvice
@@ -36,7 +37,8 @@ public class GlobalExceptionHandler {
             IncorrectAccountStatusException.class,
             ExpiredCodeException.class,
             InvalidCodeTypeException.class,
-            InvalidPasswordException.class
+            InvalidPasswordException.class,
+            ResourceNotFoundException.class
     })
     public ResponseEntity<ExceptionResponse> handleCustomExceptions(RuntimeException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(e.getMessage()));
@@ -80,6 +82,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({ InsufficientAuthenticationException.class })
     public ResponseEntity<ExceptionResponse> handleAuthenticationException(){
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionResponse("You are not logged in! Please login to continue"));
+    }
+
+    @ExceptionHandler({ AccessDeniedException.class })
+    public ResponseEntity<ExceptionResponse> handleAccessDeniedException(AccessDeniedException e){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new ExceptionResponse(e.getMessage()));
     }
 
     @ExceptionHandler({ UsernameNotFoundException.class, BadCredentialsException.class })
