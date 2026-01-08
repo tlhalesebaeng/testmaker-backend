@@ -260,4 +260,10 @@ public class TestService implements TestServiceInterface {
 
         return testRepo.save(test);
     }
+
+    @Override
+    public Collection<Test> getAllMyTests() {
+        User user = userService.getByUsername(principalUserService.getPrincipal().getUsername());
+        return testRepo.getAllByUser(user);
+    }
 }
