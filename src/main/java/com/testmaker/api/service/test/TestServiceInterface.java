@@ -12,4 +12,5 @@ public interface TestServiceInterface {
     Test saveExistingTestProgress(SaveTestRequest requestDto, Long id);
     Collection<Test> getAllMyTests();
     Test getTestById(Long id);
+    void deleteById(Long id);
 }

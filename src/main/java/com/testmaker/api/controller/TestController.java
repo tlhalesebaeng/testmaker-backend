@@ -52,4 +52,10 @@ public class TestController {
         TestResponse response = TestMapper.toResponse(testService.saveExistingTestProgress(requestDto, id));
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteTest(@PathVariable Long id) {
+        testService.deleteById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+    }
 }

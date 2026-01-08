@@ -272,4 +272,14 @@ public class TestService implements TestServiceInterface {
         Optional<Test> optionalTest = testRepo.findById(id);
         return optionalTest.orElseThrow(() -> new ResourceNotFoundException("Test not found! Please check your test id and try again"));
     }
+
+    @Override
+    public void deleteById(Long id) {
+        Test test = this.getTestById(id);
+        User user = userService.getByUsername(principalUserService.getPrincipal().getUsername());
+        if(!test.getUser().getUsername().equals(user.getUsername())) {
+            throw new AccessDeniedException("You do not have necessary permissions to perform this action");
+        }
+        testRepo.deleteById(id);
+    }
 }
