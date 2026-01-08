@@ -29,4 +29,10 @@ public class TestController {
         TestResponse response = TestMapper.toResponse(testService.saveNewTestProgress(requestDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PatchMapping("/save-progress/{id}")
+    public ResponseEntity<TestResponse> saveExistingTestProgress(@Valid @RequestBody SaveTestRequest requestDto, @PathVariable Long id) {
+        TestResponse response = TestMapper.toResponse(testService.saveExistingTestProgress(requestDto, id));
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }

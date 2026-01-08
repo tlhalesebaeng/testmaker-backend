@@ -7,4 +7,5 @@ import com.testmaker.api.entity.Test;
 public interface TestServiceInterface {
     Test createTest(CreateTestRequest requestDto);
     Test saveNewTestProgress(SaveTestRequest requestDto);
+    Test saveExistingTestProgress(SaveTestRequest requestDto, Long id);
 }
