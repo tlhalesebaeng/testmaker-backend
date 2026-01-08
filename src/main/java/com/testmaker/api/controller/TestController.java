@@ -3,7 +3,6 @@ package com.testmaker.api.controller;
 import com.testmaker.api.dto.test.CreateTestRequest;
 import com.testmaker.api.dto.test.SaveTestRequest;
 import com.testmaker.api.dto.test.TestResponse;
-import com.testmaker.api.entity.Test;
 import com.testmaker.api.mapper.TestMapper;
 import com.testmaker.api.service.test.TestServiceInterface;
 import jakarta.validation.Valid;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
