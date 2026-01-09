@@ -19,7 +19,9 @@ public class RouteService implements RouteServiceInterface{
                 new Route(prefix + "/test/mine", "GET"),
                 new Route(prefix + "/test/save-progress", "POST"),
                 new Route(prefix + "/test/save-progress/{id}", "PATCH"),
-                new Route(prefix + "/test/{id}", "DELETE")
+                new Route(prefix + "/test/{id}", "DELETE"),
+
+                new Route(prefix + "/question/{id}", "DELETE")
         );
     }
 
