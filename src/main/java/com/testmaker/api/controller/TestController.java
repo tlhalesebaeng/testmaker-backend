@@ -16,7 +16,7 @@ import java.util.Collection;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("${api.prefix}/test")
+@RequestMapping("${api.prefix}/tests")
 public class TestController {
     private final TestServiceInterface testService;
 
