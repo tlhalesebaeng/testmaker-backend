@@ -21,7 +21,9 @@ public class RouteService implements RouteServiceInterface{
                 new Route(prefix + "/test/save-progress/{id}", "PATCH"),
                 new Route(prefix + "/test/{id}", "DELETE"),
 
-                new Route(prefix + "/question/{id}", "DELETE")
+                new Route(prefix + "/question/{id}", "DELETE"),
+
+                new Route(prefix + "/answers/{id}", "DELETE")
         );
     }
 
