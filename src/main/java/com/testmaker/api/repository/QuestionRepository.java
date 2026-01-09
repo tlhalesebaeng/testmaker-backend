@@ -1,4 +1,7 @@
 package com.testmaker.api.repository;
 
-public interface QuestionRepository {
+import com.testmaker.api.entity.Question;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface QuestionRepository extends JpaRepository<Question, Long> {
 }
